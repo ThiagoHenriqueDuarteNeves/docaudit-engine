@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aurora.local/schemas/aurora-adt-output.schema.json",
+  "title": "Aurora ADT Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "summary", "items"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["analysis_type", "language", "created_at", "input_documents", "model"],
+      "properties": {
+        "analysis_type": {
+          "type": "string",
+          "enum": [
+            "requirements_extraction",
+            "risk_assessment",
+            "ambiguity_detection",
+            "compliance_checklist",
+            "contract_clause_review",
+            "normative_gap_analysis",
+            "qa_test_basis",
+            "general_technical_review"
+          ]
+        },
+        "language": { "type": "string", "default": "pt-BR" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provider", "name"],
+          "properties": {
+            "provider": { "type": "string", "default": "lm-studio" },
+            "name": { "type": "string" },
+            "temperature": { "type": "number" },
+            "max_tokens": { "type": "integer" }
+          }
+        },
+        "input_documents": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["doc_id", "title"],
+            "properties": {
+              "doc_id": { "type": "string" },
+              "title": { "type": "string" },
+              "source": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executive", "confidence", "coverage_notes"],
+      "properties": {
+        "executive": { "type": "string", "maxLength": 1500 },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "coverage_notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requirements", "non_functional_requirements", "risks", "ambiguities", "questions", "compliance_checklist"],
+      "properties": {
+        "requirements": { "$ref": "#/$defs/itemArray" },
+        "non_functional_requirements": { "$ref": "#/$defs/itemArray" },
+        "risks": { "$ref": "#/$defs/itemArray" },
+        "ambiguities": { "$ref": "#/$defs/itemArray" },
+        "questions": { "$ref": "#/$defs/itemArray" },
+        "compliance_checklist": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/checkItem" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["doc_id", "title", "quote"],
+      "properties": {
+        "doc_id": { "type": "string" },
+        "title": { "type": "string" },
+        "chunk_id": { "type": "string" },
+        "rank": { "type": "integer", "minimum": 1 },
+        "page": { "type": "integer", "minimum": 1 },
+        "section": { "type": "string" },
+        "quote": { "type": "string", "maxLength": 600 }
+      }
+    },
+    "baseItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "statement", "status", "evidence"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "statement": { "type": "string", "maxLength": 1200 },
+        "status": {
+          "type": "string",
+          "enum": ["supported", "partially_supported", "not_identified"]
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low", "info"]
+        },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "notes": { "type": "string", "maxLength": 800 }
+      }
+    },
+    "itemArray": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/baseItem" }
+    },
+    "checkItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "control", "description", "status", "evidence"],
+      "properties": {
+        "id": { "type": "string" },
+        "control": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 600 },
+        "status": {
+          "type": "string",
+          "enum": ["met", "partially_met", "not_met", "not_applicable", "not_identified"]
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "recommendation": { "type": "string", "maxLength": 800 }
+      }
+    }
+  }
+}
