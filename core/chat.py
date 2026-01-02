@@ -214,6 +214,7 @@ def build_chat_context(message: str, history: list, memory_override=None, image:
     
     # Usar Hybrid Retrieval se habilitado
     if HYBRID_AVAILABLE and is_hybrid_enabled():
+        print("🔍 [DEBUG] Contexto via HYBRID Search")
         # Busca híbrida (dense + sparse + RRF + rerank)
         hybrid_result = hybrid_search(query=message, k_docs=5, k_memory=5)
         doc_snips = hybrid_result.get("doc_snips", [])
@@ -227,6 +228,7 @@ def build_chat_context(message: str, history: list, memory_override=None, image:
                     mem_snips.append(hs)
                     seen.add(hs['text'])
     else:
+        print("🔍 [DEBUG] Contexto via LEGACY Retrieval (DocManager)")
         # Busca tradicional (apenas documentos)
         doc_snips = doc_tool.invoke(query=message, k=5)
     

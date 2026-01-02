@@ -1,0 +1,13 @@
+src/api/fastapi.ts(112,5): error TS6133: 'apiKey' is declared but its value is never read.
+src/api/fastapi.ts(115,5): error TS6133: 'backendType' is declared but its value is never read.
+src/components/ModelSelect.tsx(39,59): error TS2554: Expected 0-1 arguments, but got 3.
+src/components/ModelSelect.tsx(42,26): error TS2339: Property 'data' does not exist on type 'string[]'.
+src/components/ModelSelect.tsx(46,20): error TS2339: Property 'current' does not exist on type 'string[]'.
+src/components/ModelSelect.tsx(47,50): error TS2339: Property 'current' does not exist on type 'string[]'.
+src/components/ModelSelect.tsx(50,52): error TS2339: Property 'data' does not exist on type 'string[]'.
+src/components/ModelSelect.tsx(51,50): error TS2339: Property 'data' does not exist on type 'string[]'.
+src/components/ModelSelect.tsx(54,20): error TS2339: Property 'data' does not exist on type 'string[]'.
+src/components/ServerSetup.tsx(84,58): error TS2554: Expected 0-1 arguments, but got 2.
+src/components/ServerSetup.tsx(89,55): error TS2339: Property 'backendType' does not exist on type 'boolean'.
+src/components/ServerSetup.tsx(90,27): error TS2339: Property 'latency' does not exist on type 'boolean'.
+src/components/ServerSetup.tsx(98,33): error TS2339: Property 'backendType' does not exist on type 'boolean'.

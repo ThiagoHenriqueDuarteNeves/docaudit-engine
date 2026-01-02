@@ -96,7 +96,7 @@ class BM25Index:
         self._reset()
         
         for i, payload in enumerate(payloads):
-            doc_id = payload.get("doc_id", f"doc_{i}")
+            doc_id = payload.get("doc_id") or payload.get("source") or f"doc_{i}"
             chunk_id = payload.get("chunk_id", i)
             text = payload.get("text", "")
             
@@ -128,8 +128,12 @@ class BM25Index:
         if filters.source_id and payload.get("source_id") != filters.source_id:
             return False
         
-        if filters.doc_id and payload.get("doc_id") != filters.doc_id:
-            return False
+        if filters.doc_id:
+            if isinstance(filters.doc_id, list):
+                if payload.get("doc_id") not in filters.doc_id and payload.get("source") not in filters.doc_id:
+                    return False
+            elif payload.get("doc_id") != filters.doc_id and payload.get("source") != filters.doc_id:
+                return False
         
         if filters.tags:
             payload_tags = set(payload.get("tags", []) or [])
@@ -203,7 +207,7 @@ class BM25Index:
         for idx, score, payload in top_candidates:
             hits.append(SearchHit(
                 id=payload.get("_point_id", idx),
-                doc_id=payload.get("doc_id", ""),
+                doc_id=payload.get("doc_id") or payload.get("source") or "",
                 chunk_id=payload.get("chunk_id", 0),
                 text=payload.get("text", ""),
                 score=float(score),

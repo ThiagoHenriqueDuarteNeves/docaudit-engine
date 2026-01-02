@@ -93,7 +93,8 @@ class RetrievalFilters:
     tenant_id: Optional[str] = None
     tags: Optional[list[str]] = None
     source_id: Optional[str] = None
-    doc_id: Optional[str] = None
+    doc_id: Optional[str | list[str]] = None
+    source: Optional[str | list[str]] = None  # Added for direct source filtering
     date_from: Optional[str] = None  # ISO format
     date_to: Optional[str] = None    # ISO format
     

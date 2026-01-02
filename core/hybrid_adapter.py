@@ -4,6 +4,12 @@ Bridges rag_retrieval pipeline with existing chat.py interface
 """
 import os
 from typing import Optional
+import sys
+from pathlib import Path
+
+# Fix for rag_retrieval import (module not installed as package)
+sys.path.append(str(Path(__file__).parent.parent / "rag_retrieval"))
+
 
 # Flag to enable hybrid retrieval (off by default)
 USE_HYBRID_RETRIEVAL = os.getenv("USE_HYBRID_RETRIEVAL", "false").lower() == "true"

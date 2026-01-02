@@ -7,6 +7,11 @@ from pathlib import Path
 from typing import List, Dict, Callable, Optional
 import os
 from datetime import datetime
+import sys
+
+# Fix for rag_retrieval import (module not installed as package)
+sys.path.append(str(Path(__file__).parent / "rag_retrieval"))
+
 
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -355,6 +360,46 @@ class DocumentManager:
                     batch = chunks[i:i + BATCH_SIZE]
                     self.vector_db.add_documents(batch)
                     print(f"   📥 Indexando lote {i//BATCH_SIZE + 1} de {(total_chunks-1)//BATCH_SIZE + 1} ({len(batch)} chunks)...")
+
+                    # ---------------------------------------------------------
+                    # DUAL WRITE: Sincronizar com Qdrant (para Hybrid Retrieval)
+                    # ---------------------------------------------------------
+                    if os.getenv("QDRANT_URL"):
+                        try:
+                            # Lazy import para evitar erros se pacote faltando
+                            from rag_retrieval.rag_retrieval.qdrant_store import QdrantStore
+                            
+                            # Singleton do QdrantStore no DocumentManager
+                            if not hasattr(self, '_qdrant_sync'):
+                                print("   🔄 [SYNC] Inicializando conexão com Qdrant...")
+                                self._qdrant_sync = QdrantStore()
+                            
+                            # Converter docs para formato de chunks do Qdrant
+                            q_chunks = []
+                            for q_idx, doc in enumerate(batch):
+                                # Gerar ID determinístico
+                                combined_id = f"{doc.metadata.get('filename')}_{i+q_idx}"
+                                chunk_hash = abs(hash(combined_id)) % (10 ** 18)
+                                
+                                q_chunks.append({
+                                    "id": chunk_hash,
+                                    "text": doc.page_content,
+                                    "doc_id": doc.metadata.get('filename'),   # ID principal
+                                    "source": doc.metadata.get('filename'),   # Fallback/Compatibilidade
+                                    "source_id": doc.metadata.get('filename'),# Fallback
+                                    "chunk_id": i + q_idx,
+                                    "title": doc.metadata.get('filename'),
+                                    "created_at": datetime.now().isoformat(),
+                                    "metadata": doc.metadata
+                                })
+                            
+                            # Enviar para Qdrant
+                            self._qdrant_sync.upsert_chunks(q_chunks)
+                            print(f"   ✅ [SYNC] {len(q_chunks)} chunks enviados para Qdrant")
+                            
+                        except Exception as e:
+                            print(f"   ⚠️ [SYNC] Erro ao sincronizar com Qdrant: {e}")
+                    # ---------------------------------------------------------
 
                 print(f"✅ Arquivo indexado com sucesso!")
                 

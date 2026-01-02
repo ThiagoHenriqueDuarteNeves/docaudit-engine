@@ -1,0 +1,8 @@
+src/api/fastapi.ts(26,75): error TS6133: 'apiKey' is declared but its value is never read.
+src/api/fastapi.ts(45,70): error TS6133: 'apiKey' is declared but its value is never read.
+src/api/fastapi.ts(45,87): error TS6133: 'backendType' is declared but its value is never read.
+src/api/fastapi.ts(137,11): error TS6133: '_' is declared but its value is never read.
+src/api/fastapi.ts(138,11): error TS6133: '__' is declared but its value is never read.
+src/components/ModelSelect.tsx(42,17): error TS2345: Argument of type '{ id: string; }[]' is not assignable to parameter of type 'SetStateAction<Model[]>'.
+  Type '{ id: string; }[]' is not assignable to type 'Model[]'.
+    Property 'object' is missing in type '{ id: string; }' but required in type 'Model'.

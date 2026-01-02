@@ -67,7 +67,7 @@ def initialize_llm():
                 base_url=LM_STUDIO_URL,
                 api_key="lm-studio",
                 model=first_valid_model,
-                temperature=0.9,
+                temperature=0.0,
                 max_tokens=15000,
                 streaming=True
             )
@@ -81,9 +81,9 @@ def initialize_llm():
             llm = ChatOpenAI(
                 base_url=LM_STUDIO_URL,
                 api_key="lm-studio",
-                temperature=0.9,
+                temperature=0.0,
                 max_tokens=15000,
-                streaming=True
+                streaming=False
             )
             print("⚠️ [LLM] Inicializado sem modelo específico (fallback).")
 
@@ -107,7 +107,7 @@ def set_model(model_name: str) -> str:
             base_url=LM_STUDIO_URL,
             api_key="lm-studio",
             model=model_name,
-            temperature=0.9,
+            temperature=0.0,
             max_tokens=15000,
             streaming=True
         )

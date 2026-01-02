@@ -6,7 +6,7 @@ Expõe todas as funcionalidades via endpoints HTTP
 from fastapi import FastAPI, UploadFile, File, HTTPException, Header, Depends, Form, BackgroundTasks, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse, RedirectResponse
+from fastapi.responses import StreamingResponse, RedirectResponse, JSONResponse
 from pydantic import BaseModel
 from typing import List, Optional
 import os
@@ -26,6 +26,7 @@ from core.llm import (
 )
 from core.documents import get_doc_manager
 from core.memory import get_memory_instance
+from core.adt import analyze_documents # Aurora ADT
 from memory_manager import ConversationMemory
 
 # Instâncias Globais
@@ -56,7 +57,10 @@ origins = [
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8081",
     "http://127.0.0.1:5173",
+    "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
+    "http://localhost:3002",
+    "http://127.0.0.1:3002",
     "https://aurora.share.zrok.io",          # Produção Zrok
     "https://aurorarag.share.zrok.io",       # Dev Zrok
     "https://aurora-projeto.vercel.app",     # Vercel Project
@@ -143,6 +147,12 @@ class DebugResponse(BaseModel):
     is_identity_question: bool
     chat_history: str
 
+class AnalyzeRequest(BaseModel):
+    document_ids: List[str]
+    analysis_type: str
+    question: Optional[str] = None
+    max_items_per_category: Optional[int] = 5
+
 # ============================================================================
 # ENDPOINTS - CHAT
 # ============================================================================
@@ -201,6 +211,41 @@ async def generate_debug_context(request: ChatMessage, user_memory: Conversation
     except Exception as e:
         import traceback
         print(f"Erro debug: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/analyze")
+async def analyze_endpoint(request: AnalyzeRequest):
+    """
+    Endpoint para análise técnica de documentos (Aurora ADT).
+    """
+    try:
+        print(f"📊 [API/analyze] Request: {request.analysis_type} on {request.document_ids}")
+        
+        result = analyze_documents(
+            document_ids=request.document_ids,
+            analysis_type=request.analysis_type,
+            question=request.question,
+            max_items_per_category=request.max_items_per_category or 5
+        )
+        
+        if "error" in result:
+             if result.get("error") == "INVALID_ADT_JSON":
+                 # Retornar 422 com os detalhes de validação
+                 return JSONResponse(
+                     status_code=422,
+                     content=result
+                 )
+             elif "meta" not in result:
+                 # Outros erros genéricos
+                 raise HTTPException(status_code=500, detail=result["error"])
+             
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/chat")

@@ -146,14 +146,29 @@ class QdrantStore:
             )
         
         if filters.doc_id:
-            conditions.append(
-                FieldCondition(key="doc_id", match=MatchValue(value=filters.doc_id))
-            )
+            if isinstance(filters.doc_id, list):
+                conditions.append(
+                    FieldCondition(key="source", match=MatchAny(any=filters.doc_id))
+                )
+            else:
+                conditions.append(
+                    FieldCondition(key="source", match=MatchValue(value=filters.doc_id))
+                )
         
         if filters.tags:
             conditions.append(
                 FieldCondition(key="tags", match=MatchAny(any=filters.tags))
             )
+
+        if filters.source:
+             if isinstance(filters.source, list):
+                 conditions.append(
+                     FieldCondition(key="source", match=MatchAny(any=filters.source))
+                 )
+             else:
+                 conditions.append(
+                     FieldCondition(key="source", match=MatchValue(value=filters.source))
+                 )
         
         if filters.date_from or filters.date_to:
             range_filter = {}
@@ -222,7 +237,7 @@ class QdrantStore:
             payload = result.payload or {}
             hits.append(SearchHit(
                 id=result.id,
-                doc_id=payload.get("doc_id", ""),
+                doc_id=payload.get("doc_id") or payload.get("source") or "",
                 chunk_id=payload.get("chunk_id", 0),
                 text=payload.get("text", ""),
                 score=float(result.score) if result.score else 0.0,
