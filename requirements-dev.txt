@@ -1,0 +1,10 @@
+# Testes e Qualidade
+pytest
+pytest-cov
+pytest-html
+pytest-asyncio
+httpx
+black
+
+# CI Local
+# act (instalado via choco ou binário, não pip)

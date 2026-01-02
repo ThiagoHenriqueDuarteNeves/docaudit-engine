@@ -1,0 +1,42 @@
+# Core LangChain
+langchain>=0.3.17
+langchain-community>=0.3.17
+langchain-core>=0.3.30
+langchain-openai>=0.2.14
+langchain-chroma>=0.2.0
+langchain-huggingface>=0.1.2
+langchain-text-splitters>=0.3.4
+
+# LLM and Embeddings
+openai>=1.59.7
+sentence-transformers>=5.1.2
+transformers>=4.57.3
+tokenizers>=0.22.1
+
+# Vector Database
+chromadb>=0.5.0,<0.6.0
+qdrant-client>=1.12.0
+pypdf>=5.1.0
+
+# API
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-multipart>=0.0.18
+
+# Utilities
+python-dotenv>=1.0.1
+overrides>=7.7.0
+
+# Security
+slowapi>=0.1.9
+pydantic-settings>=2.0.0
+
+# OCR Support
+pytesseract>=0.3.13
+pdf2image>=1.17.0
+pillow>=12.0.0
+
+# Local tooling
+lmstudio>=1.1.0
+rank-bm25>=0.2.2
+numpy>=1.24.0

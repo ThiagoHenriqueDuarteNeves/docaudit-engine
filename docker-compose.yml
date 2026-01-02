@@ -1,0 +1,56 @@
+services:
+  rag-app:
+    build: .
+    container_name: rag-chatbot
+    environment:
+      - EMBEDDING_DEVICE=cuda
+      - LM_STUDIO_URL=http://host.docker.internal:1234/v1
+      - OVERRIDES_DISABLE=1
+      - ANONYMIZED_TELEMETRY=False
+      - CHROMA_DISABLE_TELEMETRY=True
+      - PYTHONUNBUFFERED=1
+      - TRANSFORMERS_OFFLINE=0
+      - HF_DATASETS_OFFLINE=0
+      - HF_HUB_OFFLINE=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "7860:7860"
+      - "8000:8000"
+    volumes:
+      # Persistir dados
+      - ./db:/app/db
+      - ./docs:/app/docs
+      - ./memory:/app/memory
+      # Bind do .env para hot-reload
+      - ./.env:/app/.env:ro
+      # Hot-reload de código Python (evita rebuild)
+      - ./app.py:/app/app.py:ro
+      - ./api.py:/app/api.py:ro
+      - ./memory_manager.py:/app/memory_manager.py:ro
+      - ./document_manager.py:/app/document_manager.py:ro
+      - ./tools.py:/app/tools.py:ro
+      - ./router.py:/app/router.py:ro
+      # Módulos novos (Hot-Swap)
+      - ./core:/app/core:ro
+      - ./rag_retrieval:/app/rag_retrieval:ro
+      - ./scripts:/app/scripts:ro
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    restart: unless-stopped
+    networks:
+      - rag-network
+
+networks:
+  rag-network:
+    driver: bridge

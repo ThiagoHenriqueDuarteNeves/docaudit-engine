@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Databases & Data
+db/
+db_prod/
+memory/
+memory_prod/
+docs/
+docs_prod/
+*.db
+*.sqlite
+memory.json
+
+# Environment & Secrets
+.env
+.venv/
+
+# Logs & Debug
+*.log
+api_debug_log.txt
+prompts/
+respostas/
+VECTOR_DB_DUMP.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+
+# Node / Frontend
+node_modules/
+frontend-new/node_modules/
+frontend-new/dist/
+frontend/node_modules/
+frontend/.next/
+
+
+# CI & Testing
+.pytest_cache/
+htmlcov/
+report.html
+pytest_log.txt
+act_*.txt
+
+# Local scripts & Secrets
+help.txt
+# Local scripts & Secrets
+help.txt
+qdrant_data/
+qdrant_memory/
+db_backup/
+db_corrupted*/
+
+# Docs Internal (Optional: keep tracked if you want internal docs in repo)
+# docs/internal/
+
+# Backups & Legacy
+db_prod_old_v1/
+
+# Qdrant & RAG Data
+bm25_index/

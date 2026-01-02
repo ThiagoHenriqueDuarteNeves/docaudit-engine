@@ -1,0 +1,84 @@
+# Version Control
+.git
+.gitignore
+.github
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter
+.ipynb_checkpoints
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.idea
+.vscode
+*.swp
+*.swo
+
+# Docker
+docker-compose.override.yml
+
+# Frontend (Excluded from Backend Build)
+frontend-new/
+frontend-new/node_modules/
+frontend-new/dist/
+
+# Tests & Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+rag_retrieval/tests/
+tests/
+
+# Logs
+*.log
+api_debug_log.txt
+debug_context_trace.txt
+
+# Local Data (Mounted via volumes usually, checking if we want to copy initially or not. 
+# Usually better to COPY code but IGNORE data if data is volume mounted)
+db/
+memory/
+docs/
+qdrant_data/
+respostas/
+# Git / env
+.git/
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Produção (se existir no repo, não copie para a imagem)
+db_prod/
+memory_prod/
+docs_prod/
+
+# Pastas runtime genéricas
+db/
+memory/
+docs/
+
+# Node / outros (se tiver)
+node_modules/
+.next/
+dist/
+build/
+

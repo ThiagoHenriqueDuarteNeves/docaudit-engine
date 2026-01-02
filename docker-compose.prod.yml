@@ -1,0 +1,82 @@
+services:
+  rag-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-chatbot-prod
+
+    environment:
+      - EMBEDDING_DEVICE=cuda
+      - LM_STUDIO_URL=http://host.docker.internal:1234/v1
+      - OVERRIDES_DISABLE=1
+      - ANONYMIZED_TELEMETRY=False
+      - CHROMA_DISABLE_TELEMETRY=True
+      - PYTHONUNBUFFERED=1
+
+      # Prewarm do modelo (opcional)
+      - PREWARM_MODEL=1
+      - EMBED_MODEL=sentence-transformers/all-MiniLM-L6-v2
+
+      # Cache Hugging Face em volume (não vai pra imagem)
+      - HF_HOME=/opt/hf_cache
+      - TRANSFORMERS_CACHE=/opt/hf_cache
+      - HF_DATASETS_CACHE=/opt/hf_cache
+
+      # Online na primeira execução (depois você pode virar offline)
+      - TRANSFORMERS_OFFLINE=0
+      - HF_DATASETS_OFFLINE=0
+      - HF_HUB_OFFLINE=0
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
+    env_file:
+      - .env
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    ports:
+      - "8081:8000" # Porta diferente de Dev (8000)
+      - "7861:7860" # Porta diferente para Gradio (se usado)
+
+    volumes:
+      # Dados ISOLADOS de produção (não misturar com Dev)
+      - ./db_prod:/app/db
+      - ./memory_prod:/app/memory
+      - ./docs_prod:/app/docs
+
+      # Cache HF persistente
+      - hf_cache:/opt/hf_cache
+
+      # Seus binds RO (mantidos como você usa)
+      - ./api.py:/app/api.py:ro
+      - ./core:/app/core:ro
+      - ./memory_manager.py:/app/memory_manager.py:ro
+      - ./document_manager.py:/app/document_manager.py:ro
+      - ./tools.py:/app/tools.py:ro
+
+      # Bind do .env
+      - ./.env:/app/.env:ro
+
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+    restart: unless-stopped
+
+    networks:
+      - rag-network
+
+volumes:
+  hf_cache:
+
+
+networks:
+  rag-network:
+    driver: bridge
