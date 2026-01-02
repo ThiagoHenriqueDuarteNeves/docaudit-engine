@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     embed_dim: int = 768
     
     # CrossEncoder for Reranking
-    cross_encoder_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    cross_encoder_model: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
     
     # BM25 Index persistence
     index_path: Path = Path("./bm25_index")
