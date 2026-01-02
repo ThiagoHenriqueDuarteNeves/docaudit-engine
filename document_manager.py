@@ -15,44 +15,27 @@ sys.path.append(str(Path(__file__).parent / "rag_retrieval"))
 
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-try:
-    from langchain_chroma import Chroma
-except ImportError:
-    from langchain_community.vectorstores import Chroma  # fallback
-try:
-    from langchain_huggingface import HuggingFaceEmbeddings
-except ImportError:
-    from langchain_community.embeddings import HuggingFaceEmbeddings  # fallback
+# Qdrant Import
+from rag_retrieval.qdrant_store import QdrantStore
+from qdrant_client.models import Filter, FieldCondition, MatchValue
 
 
 class DocumentManager:
     def __init__(
         self,
         docs_dir: str = "docs",
-        persist_dir: str = "db",
         embedding_device: str = "cuda",
         max_file_size_mb: int = 50,
         max_total_files: int = 100
     ):
         self.docs_dir = Path(docs_dir)
-        self.persist_dir = persist_dir
+        # self.persist_dir = persist_dir # Deprecated
         self.embedding_device = embedding_device
         self.max_file_size_mb = max_file_size_mb
         self.max_total_files = max_total_files
         
         # Criar diretórios
         self.docs_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Inicializar embeddings
-        import os
-        # Tentar usar cache local primeiro, mas permitir download se necessário
-        offline_mode = os.getenv('TRANSFORMERS_OFFLINE', '0') == '1'
-        
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-            model_kwargs={'device': embedding_device, 'local_files_only': offline_mode},
-            encode_kwargs={"normalize_embeddings": True}
-        )
         
         # Text splitter otimizado para documentos técnicos
         self.text_splitter = RecursiveCharacterTextSplitter(
@@ -61,38 +44,58 @@ class DocumentManager:
             separators=["\n\n", "\n", ". ", " ", ""]
         )
         
-        # Vector store (será carregado quando necessário)
+        # Vector store (Qdrant)
         self._vector_db = None
 
-    def _persist_if_supported(self):
-        """Chama persist() se o backend suportar; caso contrário, ignora."""
-        try:
-            persist = getattr(self.vector_db, "persist", None)
-            if callable(persist):
-                persist()
-        except Exception as e:
-            # Apenas loga; alguns backends persistem automaticamente
-            print(f"⚠️ Persist não suportado: {e}")
-    
     @property
-    def vector_db(self):
-        """Lazy loading do vector database"""
+    def vector_db(self) -> QdrantStore:
+        """Lazy loading do QdrantStore"""
         if self._vector_db is None:
-            # Garantir diretório de persistência
-            persist_path = Path(self.persist_dir)
-            persist_path.mkdir(parents=True, exist_ok=True)
-            # Inicializar/abrir coleção com tratamento de erro
             try:
-                self._vector_db = Chroma(
-                    persist_directory=str(persist_path),
-                    embedding_function=self.embeddings
-                )
+                # Usa variáveis de ambiente para config (definidas no run_backend_debug.bat)
+                # COLLECTION_NAME=default, etc.
+                self._vector_db = QdrantStore(collection_name="default")
+                print("✅ QdrantStore inicializado (Collection: default)")
             except Exception as e:
-                # Log mais amigável e fallback para None
-                print(f"⚠️ Erro ao inicializar Vector DB (Chroma): {e}")
-                print("   Será desativado acesso semântico a documentos até correção.")
+                print(f"⚠️ Erro ao inicializar Qdrant: {e}")
                 self._vector_db = None
         return self._vector_db
+
+    def is_document_indexed(self, file_hash: str) -> bool:
+        """Verifica se um arquivo com este hash já existe no Qdrant"""
+        try:
+            if not self.vector_db:
+                return False
+            
+            # Busca por filtro exato no metadado file_hash
+            # IMPORTANTE: QdrantStore não expõe busca de count por filtro fácil sem scroll
+            # Vamos usar o client direto para count
+            
+            client = self.vector_db.client
+            collection = self.vector_db.collection_name
+            
+            # Filtro: metadata.file_hash == file_hash
+            # Como salvamos metadata dentro do payload como dicionário "metadata", 
+            # a chave no Qdrant é "metadata.file_hash" ou "extra.file_hash" dependendo de como upsert_chunks salva
+            # Olhando upsert_chunks: salva "metadata": doc.metadata
+            # Então a chave é "metadata.file_hash"
+            
+            count_result = client.count(
+                collection_name=collection,
+                count_filter=Filter(
+                    must=[
+                        FieldCondition(
+                            key="metadata.file_hash",
+                            match=MatchValue(value=file_hash)
+                        )
+                    ]
+                )
+            )
+            return count_result.count > 0
+            
+        except Exception as e:
+            # print(f"⚠️ Erro ao verificar existência: {e}")
+            return False
     
     def calculate_file_hash(self, file_path: Path) -> str:
         """Calcula MD5 hash de um arquivo"""
@@ -156,113 +159,33 @@ class DocumentManager:
         
         return True, "OK"
     
-    def get_indexed_hashes(self) -> set:
-        """Retorna set de hashes já indexados no ChromaDB"""
-        try:
-            # ChromaDB armazena metadados com os documentos
-            collection = self.vector_db._collection
-            all_docs = collection.get()
-            
-            hashes = set()
-            if all_docs and 'metadatas' in all_docs:
-                for metadata in all_docs['metadatas']:
-                    if metadata and 'file_hash' in metadata:
-                        hashes.add(metadata['file_hash'])
-            
-            return hashes
-        except Exception as e:
-            print(f"⚠️ Erro ao buscar hashes indexados: {e}")
-            return set()
-    
-    def _prune_orphaned_documents(self, current_files: List[Path]) -> int:
-        """Remove do vector DB documentos que não existem mais no disco"""
-        try:
-            # Acesso direto à collection do Chroma
-            if not self.vector_db:
-                return 0
-                
-            print("🧹 Verificando documentos órfãos...")
-            collection = self.vector_db._collection
-            
-            # Pegar todos metadados
-            data = collection.get(include=['metadatas'])
-            
-            if not data['ids']:
-                return 0
-                
-            ids_to_delete = []
-            
-            # Criar conjunto de nomes de arquivos existentes
-            existing_filenames = {f.name for f in current_files}
-            
-            for i, meta in enumerate(data['metadatas']):
-                if not meta:
-                    continue
-                
-                # Priorizar metadado 'filename' que nós adicionamos na indexação
-                filename = meta.get('filename')
-                if not filename:
-                    # Fallback para 'source' (padrão LangChain)
-                    source = meta.get('source')
-                    if source:
-                        filename = Path(source).name
-                
-                # Se identificamos um arquivo de origem e ele não está na lista atual
-                if filename and filename not in existing_filenames:
-                    ids_to_delete.append(data['ids'][i])
-                
-            if ids_to_delete:
-                print(f"⚠️ Removendo {len(ids_to_delete)} chunks órfãos do ChromaDB...")
-                collection.delete(ids=ids_to_delete)
-                print("✅ Limpeza concluída.")
-                return len(ids_to_delete)
-            
-            return 0
-            
-        except Exception as e:
-            print(f"❌ Erro ao limpar órfãos: {e}")
-            return 0
-
     def scan_and_index(
         self,
         progress_callback: Optional[Callable[[str, float], None]] = None
     ) -> Dict:
         """
-        Escaneia pasta docs/ e indexa novos PDFs
-        
-        Args:
-            progress_callback: função(mensagem, progresso_0_a_1)
-        
-        Returns:
-            Dict com estatísticas: {indexed, skipped, errors, total_chunks}
+        Escaneia pasta docs/ e indexa novos PDFs no Qdrant
         """
         # Garantir diretório de documentos
         self.docs_dir.mkdir(parents=True, exist_ok=True)
+        self.vector_db # Trigger init
         
         # Coletar todos os arquivos suportados
         all_files = []
         for pattern in ["*.pdf", "*.txt", "*.md"]:
             all_files.extend(list(self.docs_dir.glob(pattern)))
             
-        # Limpar documentos órfãos (que foram deletados do disco)
-        self._prune_orphaned_documents(all_files)
+        # Limpeza de órfãos ignorada nesta versão por performance
+        # self._prune_orphaned_documents(all_files)
         
         if not all_files:
             return {
-                'indexed': 0,
-                'skipped': 0,
-                'errors': 0,
-                'total_chunks': 0,
+                'indexed': 0, 'skipped': 0, 'errors': 0, 'total_chunks': 0,
                 'message': 'Nenhum documento encontrado na pasta docs/'
             }
         
-        indexed_hashes = self.get_indexed_hashes()
-        
         stats = {
-            'indexed': 0,
-            'skipped': 0,
-            'errors': 0,
-            'total_chunks': 0,
+            'indexed': 0, 'skipped': 0, 'errors': 0, 'total_chunks': 0,
             'error_messages': []
         }
         
@@ -271,145 +194,74 @@ class DocumentManager:
         for idx, file_path in enumerate(all_files):
             try:
                 if progress_callback:
-                    progress_callback(
-                        f"Processando {file_path.name}...",
-                        idx / total_files
-                    )
+                    progress_callback(f"Processando {file_path.name}...", idx / total_files)
                 
                 # Calcular hash
                 file_hash = self.calculate_file_hash(file_path)
                 
-                # Verificar se já está indexado
-                if file_hash in indexed_hashes:
+                # Verificar se já está indexado no Qdrant
+                if self.is_document_indexed(file_hash):
                     stats['skipped'] += 1
                     continue
                 
-                # Escolher loader baseado na extensão
-                file_ext = file_path.suffix.lower()
-                if file_ext == '.pdf':
-                    loader = PyPDFLoader(str(file_path))
-                    documents = loader.load()
-                elif file_ext in ['.txt', '.md']:
-                    # Tentar múltiplos encodings para arquivos de texto
-                    documents = None
-                    for encoding in ['utf-8', 'latin-1', 'cp1252', 'iso-8859-1']:
-                        try:
-                            loader = TextLoader(str(file_path), encoding=encoding)
-                            documents = loader.load()
-                            print(f"   ✅ {file_path.name} carregado com encoding: {encoding}")
-                            break
-                        except Exception as e:
-                            continue
-                    
-                    if documents is None:
-                        err_msg = f"{file_path.name}: Não foi possível detectar encoding correto"
-                        print(f"❌ {err_msg}")
-                        stats['errors'] += 1
-                        stats['error_messages'].append(err_msg)
-                        continue
-                else:
-                    print(f"⚠️ Formato não suportado: {file_path.name}")
-                    stats['errors'] += 1
-                    continue
-                
+                # Carregar Documento
+                documents = self._load_file(file_path)
                 if not documents:
-                    print(f"⚠️ {file_path.name} não contém texto extraível")
+                    # OCR fallback logic can be here or inside _load_file
+                    if file_path.suffix.lower() == '.pdf':
+                         if progress_callback: progress_callback(f"Tentando OCR em {file_path.name}...", idx / total_files)
+                         documents = self._perform_ocr(file_path)
+
+                if not documents:
+                    err_msg = f"{file_path.name} não contém texto extraível"
+                    print(f"⚠️ {err_msg}")
                     stats['errors'] += 1
+                    stats['error_messages'].append(err_msg)
                     continue
                 
-                # Adicionar hash aos metadados
+                # Adicionar metadados bases
                 for doc in documents:
                     doc.metadata['file_hash'] = file_hash
                     doc.metadata['filename'] = file_path.name
                     doc.metadata['indexed_at'] = datetime.now().isoformat()
+                    # Ensure 'source' is set for compatibility
+                    if 'source' not in doc.metadata:
+                        doc.metadata['source'] = file_path.name
                 
-                # Dividir em chunks
+                # Split
                 chunks = self.text_splitter.split_documents(documents)
-                # Filtrar chunks vazios
                 chunks = [c for c in chunks if getattr(c, "page_content", "").strip()]
+                
                 if not chunks:
-                    # Tentar OCR apenas para PDFs
-                    if file_ext == '.pdf':
-                        if progress_callback:
-                            progress_callback(f"Aplicando OCR em {file_path.name}...", idx / total_files)
-                        ocr_docs = self._perform_ocr(file_path)
-                        if not ocr_docs:
-                            err_msg = f"{file_path.name} não possui texto extraível (0 chunks)."
-                            print(f"⚠️ {err_msg}")
-                            stats['errors'] += 1
-                            stats['error_messages'].append(err_msg)
-                            continue
-                        # Dividir OCR em chunks
-                        chunks = self.text_splitter.split_documents(ocr_docs)
-                        chunks = [c for c in chunks if getattr(c, "page_content", "").strip()]
+                    stats['errors'] += 1
+                    continue
+
+                # Preparar para Qdrant (Upsert)
+                q_chunks = []
+                for i, doc in enumerate(chunks):
+                    # ID Determinístico
+                    combined_id = f"{doc.metadata.get('filename')}_{i}"
+                    chunk_hash = abs(hash(combined_id)) % (10 ** 18)
                     
-                    if not chunks:
-                        err_msg = f"{file_path.name} não possui texto extraível."
-                        print(f"⚠️ {err_msg}")
-                        stats['errors'] += 1
-                        stats['error_messages'].append(err_msg)
-                        continue
-                
-                # Adicionar ao vector store
-                # Adicionar ao vector store em lotes (batching) para evitar limites do ChromaDB
-                # Limite padrão do SQLite é variável, 5461 foi o erro relatado. Usaremos 2000 para segurança.
-                BATCH_SIZE = 2000
-                total_chunks = len(chunks)
-                
-                for i in range(0, total_chunks, BATCH_SIZE):
-                    batch = chunks[i:i + BATCH_SIZE]
-                    self.vector_db.add_documents(batch)
-                    print(f"   📥 Indexando lote {i//BATCH_SIZE + 1} de {(total_chunks-1)//BATCH_SIZE + 1} ({len(batch)} chunks)...")
+                    q_chunks.append({
+                        "id": chunk_hash,
+                        "text": doc.page_content,
+                        "doc_id": doc.metadata.get('filename'),
+                        "source": doc.metadata.get('filename'), # Para filtros
+                        "source_id": doc.metadata.get('filename'),
+                        "chunk_id": i,
+                        "title": doc.metadata.get('filename'),
+                        "created_at": datetime.now().isoformat(),
+                        "metadata": doc.metadata # Importante salvar metadata completo
+                    })
 
-                    # ---------------------------------------------------------
-                    # DUAL WRITE: Sincronizar com Qdrant (para Hybrid Retrieval)
-                    # ---------------------------------------------------------
-                    if os.getenv("QDRANT_URL"):
-                        try:
-                            # Lazy import para evitar erros se pacote faltando
-                            from rag_retrieval.rag_retrieval.qdrant_store import QdrantStore
-                            
-                            # Singleton do QdrantStore no DocumentManager
-                            if not hasattr(self, '_qdrant_sync'):
-                                print("   🔄 [SYNC] Inicializando conexão com Qdrant...")
-                                self._qdrant_sync = QdrantStore()
-                            
-                            # Converter docs para formato de chunks do Qdrant
-                            q_chunks = []
-                            for q_idx, doc in enumerate(batch):
-                                # Gerar ID determinístico
-                                combined_id = f"{doc.metadata.get('filename')}_{i+q_idx}"
-                                chunk_hash = abs(hash(combined_id)) % (10 ** 18)
-                                
-                                q_chunks.append({
-                                    "id": chunk_hash,
-                                    "text": doc.page_content,
-                                    "doc_id": doc.metadata.get('filename'),   # ID principal
-                                    "source": doc.metadata.get('filename'),   # Fallback/Compatibilidade
-                                    "source_id": doc.metadata.get('filename'),# Fallback
-                                    "chunk_id": i + q_idx,
-                                    "title": doc.metadata.get('filename'),
-                                    "created_at": datetime.now().isoformat(),
-                                    "metadata": doc.metadata
-                                })
-                            
-                            # Enviar para Qdrant
-                            self._qdrant_sync.upsert_chunks(q_chunks)
-                            print(f"   ✅ [SYNC] {len(q_chunks)} chunks enviados para Qdrant")
-                            
-                        except Exception as e:
-                            print(f"   ⚠️ [SYNC] Erro ao sincronizar com Qdrant: {e}")
-                    # ---------------------------------------------------------
-
-                print(f"✅ Arquivo indexado com sucesso!")
+                # Enviar batch único por arquivo
+                print(f"   📥 Enviando {len(q_chunks)} chunks para Qdrant...")
+                self.vector_db.upsert_chunks(q_chunks)
                 
-                # DEBUG: Log de indexação
                 print(f"✅ Arquivo indexado: {file_path.name} ({len(chunks)} chunks)")
-                
                 stats['indexed'] += 1
                 stats['total_chunks'] += len(chunks)
-                
-                print(f"✅ Indexado: {file_path.name} ({len(chunks)} chunks)")
                 
             except Exception as e:
                 err_msg = f"Erro ao processar {file_path.name}: {e}"
@@ -420,18 +272,20 @@ class DocumentManager:
         if progress_callback:
             progress_callback("Indexação concluída!", 1.0)
         
-        # Persistir mudanças (se suportado)
-        self._persist_if_supported()
-        
-        if stats['errors']:
-            last_err = stats['error_messages'][-1] if stats['error_messages'] else "Erro desconhecido"
-            stats['message'] = (
-                f"Indexados: {stats['indexed']}, Ignorados: {stats['skipped']}, Erros: {stats['errors']}\n"
-                f"Último erro: {last_err}"
-            )
-        else:
-            stats['message'] = f"Indexados: {stats['indexed']}, Ignorados: {stats['skipped']}, Erros: {stats['errors']}"
+        stats['message'] = f"Indexados: {stats['indexed']}, Ignorados: {stats['skipped']}, Erros: {stats['errors']}"
         return stats
+
+    def _load_file(self, file_path: Path) -> List:
+        """Helper para carregar arquivo com retry de encoding"""
+        file_ext = file_path.suffix.lower()
+        if file_ext == '.pdf':
+            return PyPDFLoader(str(file_path)).load()
+        elif file_ext in ['.txt', '.md']:
+            for encoding in ['utf-8', 'latin-1', 'cp1252']:
+                try:
+                    return TextLoader(str(file_path), encoding=encoding).load()
+                except: continue
+        return []
 
     def _perform_ocr(self, pdf_path: Path) -> List:
         """Executa OCR em um PDF escaneado e retorna uma lista de Documents.
@@ -481,13 +335,7 @@ class DocumentManager:
     
     def delete_document(self, filename: str) -> tuple[bool, str]:
         """
-        Remove um PDF e seus chunks do vector store
-        
-        Args:
-            filename: nome do arquivo
-        
-        Returns:
-            (sucesso, mensagem)
+        Remove um PDF e seus chunks do Qdrant
         """
         file_path = self.docs_dir / filename
         
@@ -495,54 +343,45 @@ class DocumentManager:
             return False, f"Arquivo {filename} não encontrado"
         
         try:
-            # Calcular hash para remoção
-            file_hash = self.calculate_file_hash(file_path)
-
-            # Remover chunks via filtro (mais robusto)
-            try:
-                # Chroma community API aceita where na coleção
-                collection = self.vector_db._collection
-                collection.delete(where={"file_hash": file_hash})
-            except Exception:
-                # Fallback: buscar ids manualmente
-                collection = self.vector_db._collection
-                all_docs = collection.get()
-                ids_to_delete = []
-                if all_docs and 'metadatas' in all_docs:
-                    for idx, metadata in enumerate(all_docs['metadatas']):
-                        if metadata and metadata.get('file_hash') == file_hash:
-                            ids_to_delete.append(all_docs['ids'][idx])
-                if ids_to_delete:
-                    collection.delete(ids=ids_to_delete)
-            # Persistir remoções (se suportado)
-            self._persist_if_supported()
-
+            # Remover do Qdrant por filtro (source = filename)
+            if self.vector_db:
+                client = self.vector_db.client
+                collection = self.vector_db.collection_name
+                
+                # Apagar pontos onde doc_id == filename OU source == filename
+                # Qdrant delete operation
+                client.delete(
+                    collection_name=collection,
+                    points_selector=Filter(
+                        should=[
+                            FieldCondition(key="doc_id", match=MatchValue(value=filename)),
+                            FieldCondition(key="source", match=MatchValue(value=filename))
+                        ]
+                    )
+                )
+            
             # Remover arquivo físico
             file_path.unlink()
-
             return True, f"✅ {filename} removido"
 
         except Exception as e:
             return False, f"❌ Erro ao deletar {filename}: {e}"
     
-    def get_retriever(self, k: int = 4):
-        """Retorna retriever configurado"""
-        return self.vector_db.as_retriever(
-            search_type="similarity",
-            search_kwargs={"k": k}
-        )
-
     def search_documents(self, query: str, k: int = 8) -> List[Dict]:
-        """Busca semântica nos documentos e retorna snippets estruturados"""
+        """Busca semântica no Qdrant"""
         try:
-            results = self.vector_db.similarity_search_with_score(query, k=k)
+            if not self.vector_db:
+                return []
+                
+            results = self.vector_db.search_dense(query, top_k=k)
             snippets: List[Dict] = []
-            for doc, score in results:
-                meta = doc.metadata or {}
+            
+            for hit in results:
                 snippets.append({
-                    "text": doc.page_content,
-                    "source": meta.get("filename", "desconhecido"),
-                    "score": float(score)
+                    "text": hit.text,
+                    "source": hit.payload.get("source") or hit.doc_id, # Fallback
+                    "score": float(hit.score),
+                    "page": hit.payload.get("metadata", {}).get("page", 0)
                 })
             return snippets
         except Exception as e:

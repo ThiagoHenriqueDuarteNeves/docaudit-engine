@@ -147,7 +147,14 @@ def normalize_adt_output(data: any, analysis_type: str, document_ids: List[str])
             summ["coverage_notes"] = [summ["coverage_notes"]]
 
     # 3. Items Topology
-    target_keys = ["ambiguities", "requirements", "risks", "compliance_checklist", "questions"]
+    target_keys = [
+        "ambiguities", 
+        "requirements", 
+        "risks", 
+        "compliance_checklist", 
+        "questions", 
+        "non_functional_requirements"
+    ]
     
     # Garantir que items é dict
     if "items" not in data or not isinstance(data["items"], dict):
