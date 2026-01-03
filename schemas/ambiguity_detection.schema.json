@@ -1,0 +1,117 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://aurora.local/schemas/ambiguity-detection.schema.json",
+    "title": "Aurora ADT - Ambiguity Detection Output",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "meta",
+        "summary",
+        "items"
+    ],
+    "properties": {
+        "meta": {
+            "$ref": "aurora_adt_output.schema.json#/properties/meta"
+        },
+        "summary": {
+            "$ref": "aurora_adt_output.schema.json#/properties/summary"
+        },
+        "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "ambiguities"
+            ],
+            "properties": {
+                "ambiguities": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "id",
+                            "title",
+                            "statement",
+                            "status",
+                            "severity",
+                            "evidence",
+                            "question"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "title": {
+                                "type": "string"
+                            },
+                            "statement": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": [
+                                    "open",
+                                    "resolved",
+                                    "partially_resolved"
+                                ]
+                            },
+                            "severity": {
+                                "type": "string",
+                                "enum": [
+                                    "critical",
+                                    "major",
+                                    "minor"
+                                ]
+                            },
+                            "evidence": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": [
+                                        "doc_id",
+                                        "title",
+                                        "quote"
+                                    ],
+                                    "properties": {
+                                        "doc_id": {
+                                            "type": "string"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "quote": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            },
+                            "question": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "requirements": {
+                    "type": "array",
+                    "maxItems": 0
+                },
+                "non_functional_requirements": {
+                    "type": "array",
+                    "maxItems": 0
+                },
+                "risks": {
+                    "type": "array",
+                    "maxItems": 0
+                },
+                "questions": {
+                    "type": "array",
+                    "maxItems": 0
+                },
+                "compliance_checklist": {
+                    "type": "array",
+                    "maxItems": 0
+                }
+            }
+        }
+    }
+}

@@ -195,13 +195,132 @@
       background: #0f1f24;
       color: #e6f6ff;
       padding: 12px;
-      border-radius: 12px;
+      border-radius: 0 0 12px 12px;
       overflow-x: hidden;
       overflow-y: auto;
-      max-height: 280px;
+      max-height: 480px;
       white-space: pre-wrap;
       word-break: break-word;
       overflow-wrap: anywhere;
+      margin: 0;
+    }
+
+    /* JSON Toolbar */
+    .json-block {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #0f1f24;
+      margin-top: 12px;
+    }
+
+    .json-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 12px;
+      background: #1a2a30;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .json-header h4 {
+      margin: 0;
+      color: #aebbc2;
+      font-size: 12px;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .json-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .sm-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: auto;
+      font-family: inherit;
+      transition: background 0.2s;
+    }
+
+    .sm-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* JSON Tree Viewer */
+    .jv-container {
+      font-family: "JetBrains Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      padding: 12px;
+      color: #e6f6ff;
+    }
+
+    .jv-node {
+      margin-left: 18px;
+    }
+
+    .jv-key {
+      color: #569cd6;
+      margin-right: 4px;
+    }
+
+    .jv-string {
+      color: #ce9178;
+    }
+
+    .jv-number {
+      color: #b5cea8;
+    }
+
+    .jv-boolean {
+      color: #569cd6;
+    }
+
+    .jv-null {
+      color: #569cd6;
+    }
+
+    .jv-toggle {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
+      cursor: pointer;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+      user-select: none;
+    }
+
+    .jv-toggle::before {
+      content: "▶";
+      font-size: 9px;
+      color: #888;
+      display: block;
+      transition: transform 0.1s;
+    }
+
+    .jv-toggle.open::before {
+      transform: rotate(90deg);
+    }
+
+    .jv-ellipsis {
+      color: #666;
+      font-size: 11px;
+      cursor: pointer;
+      user-select: none;
+      background: #1a2a30;
+      padding: 0 4px;
+      border-radius: 2px;
     }
   </style>
 </head>
@@ -220,7 +339,7 @@
         </div>
         <div>
           <label for="analysisType">Analysis Type</label>
-          <input id="analysisType" type="text" value="ambiguity_detection" />
+          <input id="analysisType" type="text" value="risk_detection" />
         </div>
       </div>
       <div class="grid">
@@ -234,14 +353,8 @@
         </div>
         <div>
           <label for="payloadJson">Payload JSON (opcional)</label>
-          <textarea id="payloadJson" placeholder='Cole aqui o JSON completo para sobrescrever os campos acima.'>{
-  "document_ids": [
-    "Polícia Militar de Minas Gerais - CCOS - Alô Concursos _ Alô Concursos.pdf"
-  ],
-  "analysis_type": "ambiguity_detection",
-  "question": "Identifique todos os pontos do edital que possam gerar dúvidas, interpretações divergentes ou insegurança jurídica para o candidato, especialmente relacionados a requisitos, avaliações eliminatórias, critérios subjetivos e consequências administrativas. Para cada ponto, apresente o trecho de origem e formule uma pergunta objetiva de esclarecimento.",
-  "max_items_per_category": 10
-}</textarea>
+          <textarea id="payloadJson"
+            placeholder='Cole aqui o JSON completo para sobrescrever os campos acima.'></textarea>
           <p class="muted" style="margin-top:6px;">Se preenchido, o JSON abaixo substitui todos os campos.</p>
         </div>
         <div class="row">
@@ -270,16 +383,26 @@
             <div id="meta" class="muted">Sem dados ainda.</div>
           </div>
         </div>
-    </section>div>
-    <div>
-      <h3 class="section-title" id="itemsTitle">Itens</h3>
-      <div id="itemsContainer" class="grid"></div>
-    </div>
-    <div>
-      <h3 class="section-title">JSON bruto</h3>
-      <pre id="rawJson" class="json-preview">{}</pre>
-    </div>
-    </div>
+
+        <div>
+          <h3 class="section-title" id="itemsTitle">Itens</h3>
+          <div id="itemsContainer" class="grid"></div>
+        </div>
+
+        <!-- Raw JSON Block -->
+        <div class="json-block">
+          <div class="json-header">
+            <h4>JSON Bruto</h4>
+            <div class="json-actions">
+              <button class="sm-btn" onclick="copyToClipboard('rawJsonData')">Copiar</button>
+              <button class="sm-btn" onclick="toggleVisibility('rawJsonContainer')">Expandir/Ocultar</button>
+            </div>
+          </div>
+          <textarea id="rawJsonData" style="display:none"></textarea>
+          <div id="rawJsonContainer" class="json-preview"></div>
+        </div>
+      </div>
+    </section>
 
     <!-- Debug Section -->
     <div id="debugSection"
@@ -289,105 +412,201 @@
         <div class="grid">
           <div class="item">
             <h4>Stats</h4>
-            <pre id="debugStats" style="font-size:12px">...</pre>
+            <pre id="debugStats" style="font-size:12px; margin:0">...</pre>
           </div>
-          <div>
-            <h4>Request (Entrada do Modelo)</h4>
-            <pre id="debugRequest" class="json-preview" style="background:#2d1b2e; color:#ffbdba">...</pre>
+
+          <!-- Request Block -->
+          <div class="json-block">
+            <div class="json-header">
+              <h4>Request (Entrada)</h4>
+              <div class="json-actions">
+                <button class="sm-btn" onclick="copyToClipboard('debugRequestData')">Copiar</button>
+                <button class="sm-btn" onclick="toggleVisibility('debugRequestContainer')">Expandir/Ocultar</button>
+              </div>
+            </div>
+            <textarea id="debugRequestData" style="display:none"></textarea>
+            <div id="debugRequestContainer" class="json-preview" style="background:#1a1016"></div>
           </div>
-          <div>
-            <h4>Response Raw (Saída Pura)</h4>
-            <pre id="debugResponse" class="json-preview" style="background:#1b2e25; color:#baexff">...</pre>
+
+          <!-- Response Block -->
+          <div class="json-block">
+            <div class="json-header">
+              <h4>Response Raw (Saída)</h4>
+              <div class="json-actions">
+                <button class="sm-btn" onclick="copyToClipboard('debugResponseData')">Copiar</button>
+                <button class="sm-btn" onclick="toggleVisibility('debugResponseContainer')">Expandir/Ocultar</button>
+              </div>
+            </div>
+            <textarea id="debugResponseData" style="display:none"></textarea>
+            <div id="debugResponseContainer" class="json-preview" style="background:#0e1a14"></div>
           </div>
         </div>
       </div>
     </div>
 
-    </section>
   </main>
 
   <script>
+    // --- UI Helpers ---
     function toggleDebug() {
       const el = document.getElementById("debugContent");
       el.style.display = el.style.display === "none" ? "block" : "none";
     }
 
+    function toggleVisibility(id) {
+      const el = document.getElementById(id);
+      const isHidden = el.style.display === "none";
+      el.style.display = isHidden ? "block" : "none";
+    }
+
+    function copyToClipboard(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const text = el.value || el.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Conteúdo copiado com sucesso!");
+      }).catch(e => console.error(e));
+    }
+
+    // --- JSON Tree Renderer ---
+    function renderJsonTree(data, container) {
+      container.innerHTML = '';
+      container.className = 'json-preview jv-container'; // Ensure styling
+      container.appendChild(createNode(data));
+    }
+
+    function createNode(data) {
+      if (data === null) return createLeaf('null', 'null');
+      if (typeof data === 'boolean') return createLeaf(data, 'boolean');
+      if (typeof data === 'number') return createLeaf(data, 'number');
+      if (typeof data === 'string') return createLeaf(`"${data}"`, 'string');
+
+      if (Array.isArray(data)) return createCollection(data, '[', ']');
+      if (typeof data === 'object') return createCollection(data, '{', '}');
+    }
+
+    function createLeaf(val, type) {
+      const span = document.createElement('span');
+      span.className = `jv-${type}`;
+      span.textContent = val;
+      return span;
+    }
+
+    function createCollection(data, openChar, closeChar) {
+      const frag = document.createDocumentFragment();
+      const toggle = document.createElement('span');
+      toggle.className = 'jv-toggle open';
+      toggle.title = 'Expand/Collapse';
+
+      const open = document.createTextNode(openChar);
+      const close = document.createTextNode(closeChar);
+      const ellipsis = document.createElement('span');
+      ellipsis.className = 'jv-ellipsis';
+      ellipsis.textContent = '...';
+      ellipsis.style.display = 'none';
+
+      const content = document.createElement('div');
+      content.className = 'jv-node';
+
+      const keys = Object.keys(data);
+      keys.forEach((key, idx) => {
+        const line = document.createElement('div');
+        if (!Array.isArray(data)) {
+          const k = document.createElement('span');
+          k.className = 'jv-key';
+          k.textContent = `"${key}":`;
+          line.appendChild(k);
+        }
+        line.appendChild(createNode(data[key]));
+        if (idx < keys.length - 1) line.appendChild(document.createTextNode(','));
+        content.appendChild(line);
+      });
+
+      const handler = (e) => {
+        e.stopPropagation();
+        const isClosed = content.style.display === 'none';
+        content.style.display = isClosed ? 'block' : 'none';
+        ellipsis.style.display = isClosed ? 'none' : 'inline';
+        toggle.className = isClosed ? 'jv-toggle open' : 'jv-toggle closed';
+      };
+
+      toggle.onclick = handler;
+      ellipsis.onclick = handler;
+
+      frag.appendChild(toggle);
+      frag.appendChild(open);
+      frag.appendChild(ellipsis);
+      frag.appendChild(content);
+      frag.appendChild(close);
+      return frag;
+    }
+
+    // --- Main Logic ---
     const runBtn = document.getElementById("runBtn");
     const statusEl = document.getElementById("status");
     const summaryEl = document.getElementById("summary");
     const metaEl = document.getElementById("meta");
     const itemsContainer = document.getElementById("itemsContainer");
     const itemsTitle = document.getElementById("itemsTitle");
-    const rawJsonEl = document.getElementById("rawJson");
 
+    // Formatters
     function formatMeta(meta) {
       if (!meta) return "Sem dados.";
       const docs = (meta.input_documents || []).map((d) => d.title || d.doc_id).join(", ");
       return `
-          <div class="badge">${meta.analysis_type || "analysis"}</div>
-          <p><strong>Documento:</strong> ${docs || "-"}</p>
-          <p><strong>Modelo:</strong> ${(meta.model || {}).name || "-"}</p>
-          <p><strong>Criado em:</strong> ${meta.created_at || "-"}</p>
-        `;
+      <div class="badge">${meta.analysis_type || "analysis"}</div>
+      <p><strong>Documento:</strong> ${docs || "-"}</p>
+      <p><strong>Modelo:</strong> ${(meta.model || {}).name || "-"}</p>
+      <p><strong>Criado em:</strong> ${meta.created_at || "-"}</p>
+      `;
     }
 
     function formatSummary(summary) {
       if (!summary) return "Sem dados.";
       const notes = (summary.coverage_notes || []).map((n) => `• ${n}`).join("<br>");
       return `
-          <p><strong>Resumo:</strong> ${summary.executive || "-"}</p>
-          <p><strong>Confiança:</strong> ${summary.confidence || "-"}</p>
-          <p><strong>Notas:</strong><br>${notes || "-"}</p>
-        `;
+      <p><strong>Resumo:</strong> ${summary.executive || "-"}</p>
+      <p><strong>Confiança:</strong> ${summary.confidence || "-"}</p>
+      <p><strong>Notas:</strong><br>${notes || "-"}</p>
+      `;
     }
 
     function renderGenericItems(items, title) {
       itemsContainer.innerHTML = "";
       itemsTitle.textContent = title;
-
       if (!items || items.length === 0) {
         itemsContainer.innerHTML = "<p class='muted'>Nenhum item encontrado.</p>";
         return;
       }
-
       items.forEach((item, index) => {
         const card = document.createElement("div");
         card.className = "item";
-
         let content = "";
 
-        // Lógica de Renderização por Tipo de Item
-
-        // 1. Risco
         if (item.risk_type) {
           const impactColor = item.impact === 'alto' ? 'var(--danger)' : 'var(--accent)';
           content = `
-                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
-                    <h4 style="margin:0; color:${impactColor}">#${index + 1} · Risco ${item.risk_type.toUpperCase()}</h4>
-                    <span class="badge" style="background:${impactColor}; color:white">${item.impact}</span>
-                </div>
-                <p><strong>Descrição:</strong> ${item.description || "-"}</p>
-                <p><strong>Justificativa:</strong> ${item.justification || "-"}</p>
-                <p><strong>Mitigação:</strong> <em>${item.mitigation_question || "-"}</em></p>
-                <div class="evidence"><strong>Evidência:</strong><br>${item.evidence || "-"}</div>
-             `;
-        }
-        // 2. Ambiguidade
-        else if (item.question) {
+          <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+            <h4 style="margin:0; color:${impactColor}">#${index + 1} · Risco ${item.risk_type.toUpperCase()}</h4>
+            <span class="badge" style="background:${impactColor}; color:white">${item.impact}</span>
+          </div>
+          <p><strong>Descrição:</strong> ${item.description || "-"}</p>
+          <p><strong>Justificativa:</strong> ${item.justification || "-"}</p>
+          <p><strong>Mitigação:</strong> <em>${item.mitigation_question || "-"}</em></p>
+          <div class="evidence"><strong>Evidência:</strong><br>${item.evidence || "-"}</div>
+          `;
+        } else if (item.question) {
           content = `
-                <h4>#${index + 1} · Ambiguidade</h4>
-                <p><strong>Questão:</strong> ${item.question || "-"}</p>
-                <div class="evidence"><strong>Evidência:</strong><br>${item.evidence || "-"}</div>
-             `;
-        }
-        // 3. Fallback Genérico
-        else {
+            <h4>#${index + 1} · Ambiguidade</h4>
+            <p><strong>Questão:</strong> ${item.question || "-"}</p>
+            <div class="evidence"><strong>Evidência:</strong><br>${item.evidence || "-"}</div>
+          `;
+        } else {
           content = `
-                <h4>#${index + 1} · Item</h4>
-                <pre style="font-size:12px; overflow-x:auto">${JSON.stringify(item, null, 2)}</pre>
-             `;
+            <h4>#${index + 1} · Item</h4>
+            <pre style="font-size:12px; overflow-x:auto">${JSON.stringify(item, null, 2)}</pre>
+          `;
         }
-
         card.innerHTML = content;
         itemsContainer.appendChild(card);
       });
@@ -398,9 +617,7 @@
       const payloadJson = document.getElementById("payloadJson").value.trim();
       const analysisType = document.getElementById("analysisType").value.trim();
       const docIds = document.getElementById("docIds").value
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean);
+        .split("\n").map((line) => line.trim()).filter(Boolean);
       const question = document.getElementById("question").value.trim();
       const maxItems = Number(document.getElementById("maxItems").value) || 5;
 
@@ -433,56 +650,63 @@
         });
 
         const json = await response.json();
+
+        // Always render raw result
+        document.getElementById("rawJsonData").value = JSON.stringify(json, null, 2);
+        renderJsonTree(json, document.getElementById("rawJsonContainer"));
+
         if (!response.ok) {
           statusEl.textContent = `Erro ${response.status}`;
           statusEl.classList.add("error");
-          rawJsonEl.textContent = JSON.stringify(json, null, 2);
           return;
         }
 
         statusEl.textContent = "OK";
-
-        // Renderização
         summaryEl.innerHTML = formatSummary(json.summary);
         metaEl.innerHTML = formatMeta(json.meta);
 
-        // Detectar o que renderizar
         const items = json.items || {};
-        if (items.risks && items.risks.length > 0) {
-          renderGenericItems(items.risks, "Riscos Detectados");
-        } else if (items.ambiguities && items.ambiguities.length > 0) {
-          renderGenericItems(items.ambiguities, "Ambiguidades Detectadas");
-        } else if (items.requirements && items.requirements.length > 0) {
-          renderGenericItems(items.requirements, "Requisitos Extraídos");
-        } else {
-          // Renderizar primeiro array não vazio encontrado
+        if (items.risks && items.risks.length > 0) renderGenericItems(items.risks, "Riscos Detectados");
+        else if (items.ambiguities && items.ambiguities.length > 0) renderGenericItems(items.ambiguities, "Ambiguidades Detectadas");
+        else if (items.requirements && items.requirements.length > 0) renderGenericItems(items.requirements, "Requisitos Extraídos");
+        else {
           const key = Object.keys(items).find(k => Array.isArray(items[k]) && items[k].length > 0);
-          if (key) {
-            renderGenericItems(items[key], key.replace(/_/g, " ").toUpperCase());
-          } else {
-            renderGenericItems([], "Resultados");
-          }
+          renderGenericItems(items[key] || [], key ? key.replace(/_/g, " ").toUpperCase() : "Resultados");
         }
-
-
-        rawJsonEl.textContent = JSON.stringify(json, null, 2);
 
         // Debug Handling
         const debugSec = document.getElementById("debugSection");
         if (json.meta && json.meta.debug) {
           debugSec.style.display = "block";
-
           const d = json.meta.debug;
           document.getElementById("debugStats").textContent = JSON.stringify(d.context_stats, null, 2);
-          document.getElementById("debugRequest").textContent = JSON.stringify(d.llm_request, null, 2);
-          document.getElementById("debugResponse").textContent = d.llm_response_raw || "-";
+
+          // Request
+          document.getElementById("debugRequestData").value = JSON.stringify(d.llm_request, null, 2);
+          renderJsonTree(d.llm_request, document.getElementById("debugRequestContainer"));
+
+          // Response Check
+          let rRaw = d.llm_response_raw || "";
+          let rParsed = rRaw;
+          try { rParsed = JSON.parse(rRaw); } catch (e) { }
+
+          document.getElementById("debugResponseData").value = typeof rParsed === 'string' ? rParsed : JSON.stringify(rParsed, null, 2);
+
+          const respCont = document.getElementById("debugResponseContainer");
+          if (typeof rParsed === 'object' && rParsed !== null) {
+            renderJsonTree(rParsed, respCont);
+          } else {
+            respCont.innerHTML = `<pre style="margin:0">${rRaw}</pre>`;
+          }
         } else {
           debugSec.style.display = "none";
         }
+
       } catch (err) {
         statusEl.textContent = "Falha ao chamar o endpoint.";
         statusEl.classList.add("error");
-        rawJsonEl.textContent = String(err);
+        console.error(err);
+        document.getElementById("rawJsonContainer").textContent = String(err);
       }
     });
   </script>

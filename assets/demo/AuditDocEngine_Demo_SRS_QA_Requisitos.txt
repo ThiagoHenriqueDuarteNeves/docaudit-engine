@@ -1,0 +1,31 @@
+# ESPECIFICAÇÃO DE REQUISITOS DE SOFTWARE - DEMO QA
+# SISTEMA DE GESTÃO DE ENTREGAS "FAST-TRACK"
+
+## 1. Introdução
+Este documento descreve os requisitos do sistema Fast-Track para gestão de logística.
+
+## 2. Requisitos Funcionais
+
+[RF01] O sistema deve permitir o cadastro de usuários.
+[RF02] O sistema deve suportar alta carga de dados de forma amigável.
+[RF03] O usuário deve poder cancelar um pedido em um intervalo curto após a compra.
+[RF04] O relatório deve ser gerado muito rápido para não frustrar a operação.
+[RF05] O sistema deve enviar notificações sempre que possível.
+[RF06] O cálculo de frete deve considerar a tabela vigente.
+[RF07] O motorista deve conseguir ver a rota no mapa.
+[RF08] O sistema deve ser bonito e agradávelaos olhos da diretoria.
+[RF09] O login deve ser feito com usuário e senha.
+[RF10] A recuperação de senha deve enviar email.
+
+## 3. Regras de Negócio e Prazos
+
+[RN01] O prazo para devolução de mercadorias perecíveis é de até 7 dias corridos após o recebimento.
+[RN02] Clientes VIP têm prioridade na fila de atendimento.
+[RN03] Para devolução de qualquer mercadoria, o prazo é de 30 dias improrrogáveis.
+
+## 4. Requisitos Não Funcionais
+[RNF01] O sistema deve rodar em Windows e Linux.
+[RNF02] A interface deve ser responsiva.
+
+## 5. Critérios de Aceite
+[CA01] O sistema deve aceitar pagamentos via PIX.

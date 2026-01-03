@@ -1,0 +1,243 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://aurora.local/schemas/qa-requirements-audit.schema.json",
+    "title": "Aurora ADT - QA Requirements Audit Output",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "meta",
+        "summary",
+        "items"
+    ],
+    "properties": {
+        "meta": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+                "analysis_type",
+                "language"
+            ],
+            "properties": {
+                "analysis_type": {
+                    "const": "qa_requirements_audit"
+                },
+                "language": {
+                    "type": "string"
+                },
+                "debug": {
+                    "type": "object"
+                }
+            }
+        },
+        "summary": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "executive",
+                "confidence"
+            ],
+            "properties": {
+                "executive": {
+                    "type": "string"
+                },
+                "confidence": {
+                    "type": "string",
+                    "enum": [
+                        "high",
+                        "medium",
+                        "low"
+                    ]
+                },
+                "coverage_notes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "requirements",
+                "ambiguities",
+                "contradictions",
+                "unverifiable_criteria",
+                "coverage"
+            ],
+            "properties": {
+                "requirements": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "id",
+                            "tipo",
+                            "texto",
+                            "testabilidade",
+                            "evidencia_literal"
+                        ],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "tipo": {
+                                "type": "string",
+                                "enum": [
+                                    "funcional",
+                                    "nao_funcional",
+                                    "regra_negocio",
+                                    "aceite"
+                                ]
+                            },
+                            "texto": {
+                                "type": "string"
+                            },
+                            "testabilidade": {
+                                "type": "string",
+                                "enum": [
+                                    "verificavel",
+                                    "parcialmente_verificavel",
+                                    "nao_verificavel"
+                                ]
+                            },
+                            "criterio_de_teste": {
+                                "type": "string"
+                            },
+                            "evidencia_literal": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "ambiguities": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "trecho_problematico",
+                            "problema",
+                            "sugestao_reescrita",
+                            "evidencia_literal"
+                        ],
+                        "properties": {
+                            "trecho_problematico": {
+                                "type": "string"
+                            },
+                            "problema": {
+                                "type": "string"
+                            },
+                            "sugestao_reescrita": {
+                                "type": "string"
+                            },
+                            "evidencia_literal": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "contradictions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "descricao",
+                            "evidencia_a",
+                            "evidencia_b",
+                            "severidade"
+                        ],
+                        "properties": {
+                            "descricao": {
+                                "type": "string"
+                            },
+                            "evidencia_a": {
+                                "type": "string"
+                            },
+                            "evidencia_b": {
+                                "type": "string"
+                            },
+                            "severidade": {
+                                "type": "string",
+                                "enum": [
+                                    "alta",
+                                    "media",
+                                    "baixa"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "unverifiable_criteria": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                            "id_requisito",
+                            "motivo",
+                            "como_tornar_testavel",
+                            "evidencia_literal"
+                        ],
+                        "properties": {
+                            "id_requisito": {
+                                "type": "string"
+                            },
+                            "motivo": {
+                                "type": "string"
+                            },
+                            "como_tornar_testavel": {
+                                "type": "string"
+                            },
+                            "evidencia_literal": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "coverage": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                        "counts"
+                    ],
+                    "properties": {
+                        "counts": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "funcional",
+                                "nao_funcional",
+                                "regra_negocio",
+                                "aceite"
+                            ],
+                            "properties": {
+                                "funcional": {
+                                    "type": "integer"
+                                },
+                                "nao_funcional": {
+                                    "type": "integer"
+                                },
+                                "regra_negocio": {
+                                    "type": "integer"
+                                },
+                                "aceite": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "missing_expected_ids": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
