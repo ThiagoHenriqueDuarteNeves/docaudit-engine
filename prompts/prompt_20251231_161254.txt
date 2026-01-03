@@ -1,0 +1,53 @@
+=== MENSAGEM DO USUÁRIO ===
+"Para que serve NumPy?"
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+(Memória vazia)
+
+CONTEXTO DO DOCUMENTO:
+NumPy Basics: NumPy e a biblioteca fundamental para computacao numerica em Python.
+(score=1.000)
+
+Introducao Python: Python e uma linguagem de programacao de alto nivel para IA e machine learning.
+(score=0.051)
+
+O que e RAG: RAG combina recuperacao de documentos com geracao de texto usando LLMs.
+(score=0.000)
+</context_data>
+
+<chat_history>
+Usuário: "O que é RAG?"
+Assistente: RAG é um método de IA que permite que modelos de linguagem — como eu — usem informações de fontes externas (como documentos, artigos, websites, etc.) para responder perguntas com precisão e contexto relevante.
+
+Em vez de ter todas as respostas memorizadas dentro do próprio modelo, o RAG “pega” as informações necessárias de fontes externas, analisa e depois combina com o conhecimento do modelo para entregar uma resposta mais precisa e atualizada.
+
+É como se eu tivesse um “banco de dados de conhecimento” ao meu lado, e eu consulto ele quando preciso — e não me esqueço de que as informações podem mudar ou serem específicas de fontes.
+
+Se quiser, posso até explicar com um exemplo prático — ou até mesmo te mostrar como funciona em um sistema real. É só pedir! 😊
+</chat_history>
+
+<user_query>
+"Para que serve NumPy?"
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

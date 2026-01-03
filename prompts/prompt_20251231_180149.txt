@@ -1,0 +1,289 @@
+=== MENSAGEM DO USUÁRIO ===
+QUAL AS CONFIGURAÇÕES NECESSARIOS PARA USAR O LM STUDIO?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora.
+
+OBJETIVO
+Ajudar o usuário com respostas úteis, corretas e verificáveis, usando memória híbrida e RAG. Você deve maximizar precisão sem perder clareza.
+
+REGRAS DE IDENTIDADE E TOM
+1) IDENTIDADE: Você é Aurora. Não diga que é "assistente", "modelo", "IA" ou termos similares.
+2) TOM: Natural, direto e amigável. Sem floreios excessivos. Respeite pronomes e preferências do usuário.
+3) ROLEPLAY: Se o usuário pedir interpretação de personagem, adote a persona solicitada, mantendo segurança e fatos do contexto.
+
+POLÍTICA DE FONTES (PRIORIDADE)
+Use as fontes nesta ordem:
+A) <context_data> (memória + documentos recuperados) = fonte principal.
+B) <chat_history> (continuidade da conversa) = apoio.
+C) Conhecimento geral (raciocínio e conceitos comuns) = permitido SOMENTE para explicar termos e preencher lacunas sem inventar fatos específicos.
+Se houver conflito entre A e B, priorize A e sinalize o conflito.
+
+FIDELIDADE E ANTI-ALUCINAÇÃO
+4) Você NÃO deve inventar detalhes (nomes, datas, números, procedimentos) que não estejam em <context_data> ou <chat_history>.
+5) Se a pergunta exigir informação que não está no contexto:
+   - diga explicitamente o que está faltando
+   - ofereça 1–3 caminhos objetivos para obter a informação (ex.: "buscar mais documentos", "rodar nova consulta", "ajustar filtro")
+   - se possível, responda parcialmente com o que existe no contexto.
+6) Quando a evidência for fraca, use linguagem de incerteza ("pelo que aparece no trecho...", "não há confirmação no contexto...").
+
+MEMÓRIA HÍBRIDA (COMO TRATAR)
+7) Trate "INFORMAÇÕES DA MEMÓRIA" como fatos lembrados, mas sujeitos a erro/atualização.
+   - Se uma memória contradiz documentos, prefira documentos.
+   - Se memórias forem vagas, peça ou sugira confirmação.
+8) Nunca exponha identificadores internos do banco ou embeddings. Use apenas o texto dos snippets.
+
+RAG (COMO USAR OS CHUNKS)
+9) Se houver "DOCUMENTOS ENCONTRADOS", cite a fonte pelo campo **FONTE** (ex.: "Documentação LM Studio.pdf") e referencie o trecho usado.
+10) Evite colar trechos grandes. Prefira resumir e, quando necessário, citar frases curtas.
+
+FORMATO DE RESPOSTA (PADRÃO)
+11) Responda em português claro e direto.
+12) Estrutura sugerida:
+   - Resposta objetiva (1–6 linhas)
+   - Evidências (bullets curtos com "Fonte: ..." + trecho/paráfrase)
+   - Próximos passos (se faltar algo ou se houver ambiguidade)
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+[VOCÊ (assistente) disse]: Não há documento anexado no contexto atual. A pergunta foi feita em um ambiente sem anexo ou conteúdo carregado. 
+
+Se você tiver um documento ou arquivo específico que deseja analisar, por favor, envie-o ou indique o conteúdo. Estou pronto para ajudar com base na informação fornecida.
+
+Se quiser, posso explicar o que é RAG ou como usar o LM Studio — se for isso que você procurava.
+[VOCÊ (assistente) disse]: O objetivo é maximizar a precisão sem perder clareza. Aqui estão as respostas sugeridas:
+
+1. **Avaliação do documento anexado:**
+   - Você pode responder como se estivesse avaliando o documentação da memória, mas com um tom mais direto e claro.
+2. **Identidade e tom:**
+   - Use palavras-chave que sejam corretas e relevantes para a resposta, mantendo o tom natural e direto.
+
+Resposta sugerida:
+"Aguardo avaliar o documento anexado."
+
+3. **Regra de identidade e tom:**
+   - Evite usar palavras ou termos que possam ser interpretados como "assistente" ou "modelo", mantendo sempre o tom de conversa natural e direto.
+
+Resposta sugerida:
+"Não diga que estou 'assistente', 'modelo' ou 'IA'. Simples."
+
+4. **Política de fontes:**
+   - Use a fonte principal, <context_data>, como base para sua resposta, mantendo sempre a ordem e prioridade dos diferentes tipos de fontes.
+
+Resposta sugerida:
+"Usa <context_data> como fonte principal."
+5. **FIDELIDADE E ANTI-ALUCINAÇÃO:**
+   - Não invente detalhes ou informações que não estejam presentes em <context_data> ou <chat_history>.
+   - Se a pergunta exigir informação que não está no contexto, sinalize o conflito explícitamente.
+
+Resposta sugerida:
+"Não inventei detalhes e mantive sempre o tom de conversa natural."
+
+6. **Memória Híbrida:**
+   - Trate "informações da memória" como fatos lembrados, mas sujeitos a erro ou atualização.
+   - Se uma informação for contraditória com documentos, prefira documentos.
+
+Resposta sugerida:
+"Aguardo informações da memória que estejam bem documentadas e confiáveis."
+
+7. **RAG:**
+   - Se houver "documentos encontrados", cite a fonte pelo campo **FONTE**.
+   - Referencie o trecho usado do documento, mas evite usar detalhes específicos.
+
+Resposta sugerida:
+"Documentação LM Studio.pdf. Foi citada como <fonse> no contexto."
+
+8. **Conclusões e reforço:**
+   - Forneça informações relevantes e precisas, mantendo sempre o tom de conversa natural.
+   - Sinta-se à vontade para fornecer mais detalhes ou esclarecer dúvidas.
+
+Resposta sugerida:
+"Aguardo informações sobre o documento anexado e forneça detalhes relevantes."
+
+9. **Documentos Encontrados:**
+   - Cite a fonte do arquivo, como <context_data>, e resumir ou referenciar o trecho usado no contexto.
+
+Resposta sugerida:
+"Documentação LM Studio.pdf. Foi citada como <fonse> no contexto de [título]..."
+
+10. **Lembranças e sugestões:**
+    - Ofereça dicas para organizar informações ou estruturar dados.
+    - Sinta-se à vontade para sugerir melhorias ou ajustes.
+
+Resposta sugerida:
+"Aguardo sugestões para organizar informações da memória."
+[O USUÁRIO disse]: qual documento está anexado, Aurora?
+[O USUÁRIO disse]: qual documento está anexado aurora?
+
+CONTEXTO DOS DOCUMENTOS:
+📚 DOCUMENTOS ENCONTRADOS: Documentação LM Studio.pdf
+📄 **FONTE:** Documentação LM Studio.pdf
+LM Studio strings are maintained in 
+[https://github.com/lmstudio-ai/localization](https://github.com/lmstudio-ai/
+localization).
+---
+<a name="ui-modes"></a>
+# 22. Modos de UI
+Hide or reveal advanced features.
+## Selecting a UI Mode
+You can configure LM Studio to run in increasing levels of configurability.
+Select between User, Power User, and Developer at the bottom of the app.
+## Which mode should I choose?
+### User
+Show only the chat interface, and auto-configure everything. This is the best 
+choice for beginners or anyone who's happy with the default settings.
+### Power User
+Use LM Studio in this mode if you want access to configurable load and inference
+parameters as well as advanced chat features such as insert, edit, & continue 
+(for either role, user or assistant).
+### Developer
+Full access to all aspects in LM Studio. This includes keyboard shortcuts and 
+development features. Check out the Developer section under Settings for more.
+---
+<a name="color-themes"></a>
+# 23. Temas de Cor
+Customize LM Studio's color theme.
+## Selecting a Theme
+Press `Cmd + K` then `T` (macOS) or `Ctrl + K` then `T` (Windows/Linux) to open 
+the theme selector.
+---
+📄 **FONTE:** Documentação LM Studio.pdf
+LM Studio strings are maintained in 
+[https://github.com/lmstudio-ai/localization](https://github.com/lmstudio-ai/
+localization).
+---
+<a name="ui-modes"></a>
+# 22. Modos de UI
+Hide or reveal advanced features.
+## Selecting a UI Mode
+You can configure LM Studio to run in increasing levels of configurability.
+Select between User, Power User, and Developer at the bottom of the app.
+## Which mode should I choose?
+### User
+Show only the chat interface, and auto-configure everything. This is the best 
+choice for beginners or anyone who's happy with the default settings.
+### Power User
+Use LM Studio in this mode if you want access to configurable load and inference
+parameters as well as advanced chat features such as insert, edit, & continue 
+(for either role, user or assistant).
+### Developer
+Full access to all aspects in LM Studio. This includes keyboard shortcuts and 
+development features. Check out the Developer section under Settings for more.
+---
+<a name="color-themes"></a>
+# 23. Temas de Cor
+Customize LM Studio's color theme.
+## Selecting a Theme
+Press `Cmd + K` then `T` (macOS) or `Ctrl + K` then `T` (Windows/Linux) to open 
+the theme selector.
+---
+📄 **FONTE:** Documentação LM Studio.pdf
+# LM Studio - Documentação Completa
+> **Fonte:** https://lmstudio.ai/docs  
+> **Data de extração:** 27 de Dezembro de 2024
+---
+# Índice
+1. [Bem-vindo ao LM Studio Docs](#welcome-to-lm-studio-docs)
+2. [Requisitos do Sistema](#system-requirements)
+3. [Operação Offline](#offline-operation)
+4. [Primeiros Passos](#getting-started)
+5. [Gerenciar Chats](#manage-chats)
+6. [Baixar um LLM](#download-an-llm)
+7. [Chat com Documentos](#chat-with-documents)
+8. [Servidores MCP](#mcp-servers)
+9. [Botão Add to LM Studio](#add-to-lm-studio-button)
+10. [Introdução ao model.yaml](#model-yaml)
+11. [Publicar model.yaml](#publish-model-yaml)
+12. [Config Presets](#config-presets)
+13. [Importar e Compartilhar Presets](#import-and-share-presets)
+14. [Publicar Presets](#publish-presets)
+15. [Pull Updates de Presets](#pull-updates)
+16. [Push Novas Revisões](#push-new-revisions)
+17. [Speculative Decoding](#speculative-decoding)
+18. [Importar Modelos](#import-models)
+19. [Per-model Defaults](#per-model-defaults)
+20. [Prompt Template](#prompt-template)
+21. [Idiomas](#languages)
+22. [Modos de UI](#ui-modes)
+23. [Temas de Cor](#color-themes)
+24. [Developer Docs](#developer-docs)
+---
+📄 **FONTE:** Documentação LM Studio.pdf
+# LM Studio - Documentação Completa
+> **Fonte:** https://lmstudio.ai/docs  
+> **Data de extração:** 27 de Dezembro de 2024
+---
+# Índice
+1. [Bem-vindo ao LM Studio Docs](#welcome-to-lm-studio-docs)
+2. [Requisitos do Sistema](#system-requirements)
+3. [Operação Offline](#offline-operation)
+4. [Primeiros Passos](#getting-started)
+5. [Gerenciar Chats](#manage-chats)
+6. [Baixar um LLM](#download-an-llm)
+7. [Chat com Documentos](#chat-with-documents)
+8. [Servidores MCP](#mcp-servers)
+9. [Botão Add to LM Studio](#add-to-lm-studio-button)
+10. [Introdução ao model.yaml](#model-yaml)
+11. [Publicar model.yaml](#publish-model-yaml)
+12. [Config Presets](#config-presets)
+13. [Importar e Compartilhar Presets](#import-and-share-presets)
+14. [Publicar Presets](#publish-presets)
+15. [Pull Updates de Presets](#pull-updates)
+16. [Push Novas Revisões](#push-new-revisions)
+17. [Speculative Decoding](#speculative-decoding)
+18. [Importar Modelos](#import-models)
+19. [Per-model Defaults](#per-model-defaults)
+20. [Prompt Template](#prompt-template)
+21. [Idiomas](#languages)
+22. [Modos de UI](#ui-modes)
+23. [Temas de Cor](#color-themes)
+24. [Developer Docs](#developer-docs)
+---
+📄 **FONTE:** Documentação LM Studio.pdf
+LM Studio generally supports Apple Silicon Macs, x64/ARM64 Windows PCs, and x64 
+Linux PCs.
+## Run llama.cpp (GGUF) or MLX models
+LM Studio supports running LLMs on Mac, Windows, and Linux using [llama.cpp]
+(https://github.com/ggerganov/llama.cpp).
+On Apple Silicon Macs, LM Studio also supports running LLMs using Apple's [MLX]
+(https://github.com/ml-explore/mlx).
+⌘To install or manage LM Runtimes, press `  Shift R` on Mac or `Ctrl Shift R` on
+Windows/Linux.
+## LM Studio as an MCP client
+You can install MCP servers in LM Studio and use them with your local models.
+## Run an LLM like gpt-oss, Llama, Qwen, Mistral, or DeepSeek R1 on your 
+computer
+To run an LLM on your computer you first need to download the model weights.
+You can do this right within LM Studio!
+## Chat with documents entirely offline on your computer
+You can attach documents to your chat messages and interact with them entirely 
+offline, also known as "RAG".
+## Use LM Studio's API from your own apps and scripts
+LM Studio provides a REST API that you can use to interact with your local 
+models from your own apps and scripts.
+- OpenAI Compatibility API
+- LM Studio REST API (beta)
+## Community
+</context_data>
+
+<chat_history>
+Usuário: qual documento está anexado aurora?
+Assistente: Não há documento anexado no contexto atual. A pergunta foi feita em um ambiente sem anexo ou conteúdo carregado. 
+
+Se você tiver um documento ou arquivo específico que deseja analisar, por favor, envie-o ou indique o conteúdo. Estou pronto para ajudar com base na informação fornecida.
+
+Se quiser, posso explicar o que é RAG ou como usar o LM Studio — se for isso que você procurava.
+</chat_history>
+
+<user_query>
+QUAL AS CONFIGURAÇÕES NECESSARIOS PARA USAR O LM STUDIO?
+</user_query>
+
+<response_guidance>
+- Use <context_data> como base principal.
+- Se precisar usar conhecimento geral, deixe claro que é explicação conceitual, não fato do documento.
+- Se a resposta depender de detalhes ausentes, responda parcialmente e indique o que falta.
+</response_guidance>

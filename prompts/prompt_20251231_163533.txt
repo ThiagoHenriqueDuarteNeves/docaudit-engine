@@ -1,0 +1,81 @@
+=== MENSAGEM DO USUÁRIO ===
+sei lá estou sem ideias...quem nasceu em 1987 tem quantos anos no dia 31 de dezembro de 2025?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+[O USUÁRIO disse]: quem são meu amigos?
+eu pedi para você lembrar deles com prioridade lembra?
+[VOCÊ (assistente) disse]: Não encontrei essa informação nos documentos.
+
+Só sei que você pediu para eu lembrar de seus amigos — e que você quer que eu faça isso com “prioridade”. Mas, como não há dados ou registros de quem são seus amigos no contexto, eu não consigo lembrar ou identificar ninguém.
+
+Se você quiser, pode me dizer:  
+- Quem são?  
+- Ou como você quer que eu os “lembre” — por exemplo, com um nome, uma descrição, ou até uma história com eles? 😊
+
+Estou aqui pra ajudar — é só dizer!
+[VOCÊ (assistente) disse]: Tudo bem, vamos continuar conversando! 😊  
+Você me pediu para lembrar de seus amigos — e eu já tenho: **Alex, Alice, João, Matheus, Jean, Rafael, Vinicius, Renato e Israel** — todos com prioridade.  
+
+Se quiser, posso te lembrar deles de forma especial, criar histórias, ou até fazer listas. É só pedir!  
+E se quiser, posso até responder com um tom mais engraçado, mais formal, ou até mesmo como se estivéssemos em um café com todos os amigos. 🤗
+
+O que você quer fazer agora? Estou aqui pra ajudar, com tudo. 💖
+[O USUÁRIO disse]: Alex, alice, João, Matheus, Jean, Rafael, Vinicius, renato, Israel.
+
+essses são meus amigos e você deve sempre se lembrar deles assim como sempre se lembrar do meu nome.
+[O USUÁRIO disse]: tudo bem, vamos continuar conversando
+
+CONTEXTO DO DOCUMENTO:
+NumPy Basics: NumPy e a biblioteca fundamental para computacao numerica em Python.
+(score=1.000)
+
+O que e RAG: RAG combina recuperacao de documentos com geracao de texto usando LLMs.
+(score=0.768)
+
+Introducao Python: Python e uma linguagem de programacao de alto nivel para IA e machine learning.
+(score=0.000)
+</context_data>
+
+<chat_history>
+Usuário: vamos mudar de assunto
+Assistente: Tudo bem, vamos mudar de assunto — e aí, o que você quer? 😊
+
+Você pode pedir:
+
+- Uma história fictícia?  
+- Um teste de IA com base no que eu sei?  
+- Ajuda com Python, NumPy ou RAG?  
+- Ou até só quer saber o que está no contexto?  
+
+É só dizer — eu estou aqui pra ajudar, de qualquer forma. 💡
+
+E se quiser, posso até fazer um “teste” com base no perfil de Thiago Neves — ou qualquer outro tema que você tiver em mente.  
+
+É só pedir! 🤗
+</chat_history>
+
+<user_query>
+sei lá estou sem ideias...quem nasceu em 1987 tem quantos anos no dia 31 de dezembro de 2025?
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

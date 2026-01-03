@@ -1,0 +1,77 @@
+=== MENSAGEM DO USUÁRIO ===
+verifique a documentação do lm studio e me traga os elemntos mais tecnicos da documentação
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+[VOCÊ (assistente) disse]: RAG é um método que combina a recuperação de documentos com a geração de texto usando modelos de linguagem grandes (LLMs). Ou seja, ele “busca” informações relevantes em um conjunto de documentos e depois “escreve” uma resposta baseada nesses dados — como se estivesse usando um motor de pesquisa + um escritor inteligente.
+
+É como se você tivesse um livro enorme e um assistente que lê partes dele e responde suas perguntas com base no que encontrou — e tudo isso de forma rápida e precisa.
+
+Se quiser, posso te explicar com um exemplo simples! 😊
+[VOCÊ (assistente) disse]: RAG é um método de IA que permite que modelos de linguagem — como eu — usem informações de fontes externas (como documentos, artigos, websites, etc.) para responder perguntas com precisão e contexto relevante.
+
+Em vez de ter todas as respostas memorizadas dentro do próprio modelo, o RAG “pega” as informações necessárias de fontes externas, analisa e depois combina com o conhecimento do modelo para entregar uma resposta mais precisa e atualizada.
+
+É como se eu tivesse um “banco de dados de conhecimento” ao meu lado, e eu consulto ele quando preciso — e não me esqueço de que as informações podem mudar ou serem específicas de fontes.
+
+Se quiser, posso até explicar com um exemplo prático — ou até mesmo te mostrar como funciona em um sistema real. É só pedir! 😊
+[VOCÊ (assistente) disse]: Claro! Com base nos assuntos que já discutimos — Python, NumPy e RAG (Recuperação de Documentos com Geração de Texto) — aqui estão algumas ideias para você explorar:  
+
+1. **Projetinho com Python e NumPy**: Crie um script que use NumPy para analisar dados de uma planilha (como vendas ou medições de sensor) e mostre os resultados em gráficos simples, usando a biblioteca Matplotlib (que pode ser adicionada se precisar). Isso ajuda a entender como processar números grandes de forma rápida!  
+
+2. **Experimento com RAG**: Imagine criar um sistema que responde perguntas sobre um arquivo PDF (como um relatório) usando LLMs. Você poderia começar com o RAG para extrair informações do documento e gerar respostas personalizadas, como responderem a perguntas específicas sobre o conteúdo do PDF.  
+
+3. **Aprender Python de forma prática**: Se você quer focar em IA/Machine Learning, comece com um projeto simples (ex: classificar imagens usando bibliotecas como scikit-learn ou TensorFlow) e use Python para escrever os códigos. NumPy vai ser seu amigo nessa jornada, já que ele é fundamental para trabalhar com arrays de dados!  
+
+Qual delas te interessa mais? Ou você tem uma ideia própria que quer desenvolver? Estou aqui pra ajudar a detalhar!
+[O USUÁRIO disse]: na verdade eu quero ideias
+[O USUÁRIO disse]: tudo bem, vamos continuar conversando
+
+CONTEXTO DO DOCUMENTO:
+O que e RAG: RAG combina recuperacao de documentos com geracao de texto usando LLMs.
+(score=1.000)
+
+NumPy Basics: NumPy e a biblioteca fundamental para computacao numerica em Python.
+(score=0.072)
+
+Introducao Python: Python e uma linguagem de programacao de alto nivel para IA e machine learning.
+(score=0.000)
+</context_data>
+
+<chat_history>
+Usuário: na verdade eu quero ideias
+Assistente: Claro! Com base nos assuntos que já discutimos — Python, NumPy e RAG (Recuperação de Documentos com Geração de Texto) — aqui estão algumas ideias para você explorar:  
+
+1. **Projetinho com Python e NumPy**: Crie um script que use NumPy para analisar dados de uma planilha (como vendas ou medições de sensor) e mostre os resultados em gráficos simples, usando a biblioteca Matplotlib (que pode ser adicionada se precisar). Isso ajuda a entender como processar números grandes de forma rápida!  
+
+2. **Experimento com RAG**: Imagine criar um sistema que responde perguntas sobre um arquivo PDF (como um relatório) usando LLMs. Você poderia começar com o RAG para extrair informações do documento e gerar respostas personalizadas, como responderem a perguntas específicas sobre o conteúdo do PDF.  
+
+3. **Aprender Python de forma prática**: Se você quer focar em IA/Machine Learning, comece com um projeto simples (ex: classificar imagens usando bibliotecas como scikit-learn ou TensorFlow) e use Python para escrever os códigos. NumPy vai ser seu amigo nessa jornada, já que ele é fundamental para trabalhar com arrays de dados!  
+
+Qual delas te interessa mais? Ou você tem uma ideia própria que quer desenvolver? Estou aqui pra ajudar a detalhar!
+</chat_history>
+
+<user_query>
+verifique a documentação do lm studio e me traga os elemntos mais tecnicos da documentação
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

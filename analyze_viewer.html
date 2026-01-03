@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DocAudit - Analyze Viewer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f3ec;
+      --panel: #ffffff;
+      --ink: #1b1b1f;
+      --muted: #5c5c66;
+      --accent: #0f4c5c;
+      --accent-soft: #e6f2f4;
+      --border: #e2ddd6;
+      --danger: #b33a3a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Source Serif 4", "Georgia", serif;
+      font-size: 16px;
+      background: radial-gradient(circle at 20% 20%, #ffffff 0%, #f7f3ec 45%, #efe7db 100%);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 32px 24px 12px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    main {
+      display: grid;
+      gap: 16px;
+      padding: 16px 24px 40px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 12px 30px rgba(30, 30, 40, 0.08);
+      overflow-x: hidden;
+    }
+
+    label {
+      display: block;
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    input,
+    textarea,
+    button {
+      width: 100%;
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      font-size: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 160px;
+      resize: vertical;
+    }
+
+    button {
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-weight: 600;
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(15, 76, 92, 0.25);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .row {
+      display: grid;
+      gap: 12px;
+    }
+
+    @media (min-width: 840px) {
+      .row {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    }
+
+    .section-title {
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    #summary,
+    #meta {
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fffdf9;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .item h4 {
+      margin: 0 0 6px;
+      font-size: 14px;
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+    }
+
+    .item p {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .item .evidence {
+      background: var(--accent-soft);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 15px;
+      color: #1d3840;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .error {
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    .json-preview {
+      font-family: "JetBrains Mono", "Courier New", monospace;
+      font-size: 12px;
+      background: #0f1f24;
+      color: #e6f6ff;
+      padding: 12px;
+      border-radius: 12px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      max-height: 280px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>DocAudit Engine · Analyze Viewer</h1>
+    <p>Envie um payload para <code>/api/analyze</code> e visualize o resultado em formato legível.</p>
+  </header>
+  <main>
+    <section class="panel grid">
+      <div class="row">
+        <div>
+          <label for="endpoint">Endpoint</label>
+          <input id="endpoint" type="text" value="http://localhost:8002/api/analyze" />
+        </div>
+        <div>
+          <label for="analysisType">Analysis Type</label>
+          <input id="analysisType" type="text" value="ambiguity_detection" />
+        </div>
+      </div>
+      <div class="grid">
+        <div>
+          <label for="docIds">Document IDs (1 por linha)</label>
+          <textarea id="docIds">Polícia Militar de Minas Gerais - CCOS - Alô Concursos _ Alô Concursos.pdf</textarea>
+        </div>
+        <div>
+          <label for="question">Pergunta (opcional)</label>
+          <input id="question" type="text" placeholder="Ex: encontre ambiguidades no edital" />
+        </div>
+        <div>
+          <label for="payloadJson">Payload JSON (opcional)</label>
+          <textarea id="payloadJson" placeholder='Cole aqui o JSON completo para sobrescrever os campos acima.'>{
+  "document_ids": [
+    "Polícia Militar de Minas Gerais - CCOS - Alô Concursos _ Alô Concursos.pdf"
+  ],
+  "analysis_type": "ambiguity_detection",
+  "question": "Identifique todos os pontos do edital que possam gerar dúvidas, interpretações divergentes ou insegurança jurídica para o candidato, especialmente relacionados a requisitos, avaliações eliminatórias, critérios subjetivos e consequências administrativas. Para cada ponto, apresente o trecho de origem e formule uma pergunta objetiva de esclarecimento.",
+  "max_items_per_category": 10
+}</textarea>
+          <p class="muted" style="margin-top:6px;">Se preenchido, o JSON abaixo substitui todos os campos.</p>
+        </div>
+        <div class="row">
+          <div>
+            <label for="maxItems">Max items por categoria</label>
+            <input id="maxItems" type="number" value="5" min="1" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button id="runBtn" type="button">Executar análise</button>
+          </div>
+        </div>
+        <div id="status" class="muted"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="grid">
+        <div class="row">
+          <div>
+            <h3 class="section-title">Resumo</h3>
+            <div id="summary" class="muted">Sem dados ainda.</div>
+          </div>
+          <div>
+            <h3 class="section-title">Meta</h3>
+            <div id="meta" class="muted">Sem dados ainda.</div>
+          </div>
+        </div>
+    </section>div>
+    <div>
+      <h3 class="section-title" id="itemsTitle">Itens</h3>
+      <div id="itemsContainer" class="grid"></div>
+    </div>
+    <div>
+      <h3 class="section-title">JSON bruto</h3>
+      <pre id="rawJson" class="json-preview">{}</pre>
+    </div>
+    </div>
+
+    <!-- Debug Section -->
+    <div id="debugSection"
+      style="display:none; margin-top: 16px; border-top: 1px dashed var(--border); padding-top: 16px;">
+      <h3 class="section-title" style="cursor:pointer" onclick="toggleDebug()">🐞 Debug LLM (Clique para expandir)</h3>
+      <div id="debugContent" style="display:none;">
+        <div class="grid">
+          <div class="item">
+            <h4>Stats</h4>
+            <pre id="debugStats" style="font-size:12px">...</pre>
+          </div>
+          <div>
+            <h4>Request (Entrada do Modelo)</h4>
+            <pre id="debugRequest" class="json-preview" style="background:#2d1b2e; color:#ffbdba">...</pre>
+          </div>
+          <div>
+            <h4>Response Raw (Saída Pura)</h4>
+            <pre id="debugResponse" class="json-preview" style="background:#1b2e25; color:#baexff">...</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </section>
+  </main>
+
+  <script>
+    function toggleDebug() {
+      const el = document.getElementById("debugContent");
+      el.style.display = el.style.display === "none" ? "block" : "none";
+    }
+
+    const runBtn = document.getElementById("runBtn");
+    const statusEl = document.getElementById("status");
+    const summaryEl = document.getElementById("summary");
+    const metaEl = document.getElementById("meta");
+    const itemsContainer = document.getElementById("itemsContainer");
+    const itemsTitle = document.getElementById("itemsTitle");
+    const rawJsonEl = document.getElementById("rawJson");
+
+    function formatMeta(meta) {
+      if (!meta) return "Sem dados.";
+      const docs = (meta.input_documents || []).map((d) => d.title || d.doc_id).join(", ");
+      return `
+          <div class="badge">${meta.analysis_type || "analysis"}</div>
+          <p><strong>Documento:</strong> ${docs || "-"}</p>
+          <p><strong>Modelo:</strong> ${(meta.model || {}).name || "-"}</p>
+          <p><strong>Criado em:</strong> ${meta.created_at || "-"}</p>
+        `;
+    }
+
+    function formatSummary(summary) {
+      if (!summary) return "Sem dados.";
+      const notes = (summary.coverage_notes || []).map((n) => `• ${n}`).join("<br>");
+      return `
+          <p><strong>Resumo:</strong> ${summary.executive || "-"}</p>
+          <p><strong>Confiança:</strong> ${summary.confidence || "-"}</p>
+          <p><strong>Notas:</strong><br>${notes || "-"}</p>
+        `;
+    }
+
+    function renderGenericItems(items, title) {
+      itemsContainer.innerHTML = "";
+      itemsTitle.textContent = title;
+
+      if (!items || items.length === 0) {
+        itemsContainer.innerHTML = "<p class='muted'>Nenhum item encontrado.</p>";
+        return;
+      }
+
+      items.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "item";
+
+        let content = "";
+
+        // Lógica de Renderização por Tipo de Item
+
+        // 1. Risco
+        if (item.risk_type) {
+          const impactColor = item.impact === 'alto' ? 'var(--danger)' : 'var(--accent)';
+          content = `
+                <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:8px;">
+                    <h4 style="margin:0; color:${impactColor}">#${index + 1} · Risco ${item.risk_type.toUpperCase()}</h4>
+                    <span class="badge" style="background:${impactColor}; color:white">${item.impact}</span>
+                </div>
+                <p><strong>Descrição:</strong> ${item.description || "-"}</p>
+                <p><strong>Justificativa:</strong> ${item.justification || "-"}</p>
+                <p><strong>Mitigação:</strong> <em>${item.mitigation_question || "-"}</em></p>
+                <div class="evidence"><strong>Evidência:</strong><br>${item.evidence || "-"}</div>
+             `;
+        }
+        // 2. Ambiguidade
+        else if (item.question) {
+          content = `
+                <h4>#${index + 1} · Ambiguidade</h4>
+                <p><strong>Questão:</strong> ${item.question || "-"}</p>
+                <div class="evidence"><strong>Evidência:</strong><br>${item.evidence || "-"}</div>
+             `;
+        }
+        // 3. Fallback Genérico
+        else {
+          content = `
+                <h4>#${index + 1} · Item</h4>
+                <pre style="font-size:12px; overflow-x:auto">${JSON.stringify(item, null, 2)}</pre>
+             `;
+        }
+
+        card.innerHTML = content;
+        itemsContainer.appendChild(card);
+      });
+    }
+
+    runBtn.addEventListener("click", async () => {
+      const endpoint = document.getElementById("endpoint").value.trim();
+      const payloadJson = document.getElementById("payloadJson").value.trim();
+      const analysisType = document.getElementById("analysisType").value.trim();
+      const docIds = document.getElementById("docIds").value
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean);
+      const question = document.getElementById("question").value.trim();
+      const maxItems = Number(document.getElementById("maxItems").value) || 5;
+
+      statusEl.textContent = "Executando...";
+      statusEl.classList.remove("error");
+
+      let payload;
+      if (payloadJson) {
+        try {
+          payload = JSON.parse(payloadJson);
+        } catch (err) {
+          statusEl.textContent = "JSON invalido no payload.";
+          statusEl.classList.add("error");
+          return;
+        }
+      } else {
+        payload = {
+          document_ids: docIds,
+          analysis_type: analysisType,
+          max_items_per_category: maxItems
+        };
+        if (question) payload.question = question;
+      }
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const json = await response.json();
+        if (!response.ok) {
+          statusEl.textContent = `Erro ${response.status}`;
+          statusEl.classList.add("error");
+          rawJsonEl.textContent = JSON.stringify(json, null, 2);
+          return;
+        }
+
+        statusEl.textContent = "OK";
+
+        // Renderização
+        summaryEl.innerHTML = formatSummary(json.summary);
+        metaEl.innerHTML = formatMeta(json.meta);
+
+        // Detectar o que renderizar
+        const items = json.items || {};
+        if (items.risks && items.risks.length > 0) {
+          renderGenericItems(items.risks, "Riscos Detectados");
+        } else if (items.ambiguities && items.ambiguities.length > 0) {
+          renderGenericItems(items.ambiguities, "Ambiguidades Detectadas");
+        } else if (items.requirements && items.requirements.length > 0) {
+          renderGenericItems(items.requirements, "Requisitos Extraídos");
+        } else {
+          // Renderizar primeiro array não vazio encontrado
+          const key = Object.keys(items).find(k => Array.isArray(items[k]) && items[k].length > 0);
+          if (key) {
+            renderGenericItems(items[key], key.replace(/_/g, " ").toUpperCase());
+          } else {
+            renderGenericItems([], "Resultados");
+          }
+        }
+
+
+        rawJsonEl.textContent = JSON.stringify(json, null, 2);
+
+        // Debug Handling
+        const debugSec = document.getElementById("debugSection");
+        if (json.meta && json.meta.debug) {
+          debugSec.style.display = "block";
+
+          const d = json.meta.debug;
+          document.getElementById("debugStats").textContent = JSON.stringify(d.context_stats, null, 2);
+          document.getElementById("debugRequest").textContent = JSON.stringify(d.llm_request, null, 2);
+          document.getElementById("debugResponse").textContent = d.llm_response_raw || "-";
+        } else {
+          debugSec.style.display = "none";
+        }
+      } catch (err) {
+        statusEl.textContent = "Falha ao chamar o endpoint.";
+        statusEl.classList.add("error");
+        rawJsonEl.textContent = String(err);
+      }
+    });
+  </script>
+</body>
+
+</html>

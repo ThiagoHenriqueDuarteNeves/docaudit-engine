@@ -1,0 +1,156 @@
+=== MENSAGEM DO USUÁRIO ===
+me de um novo codigo
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+[O USUÁRIO disse]: me de um codigo em html
+
+CONTEXTO DO DOCUMENTO:
+Thiago Neves.pdf: cenário e do sistema).
+PROJETOS (PORTFÓLIO)
+ Validador de acurácia de OCR (Python): cálculo de CER/WER e métricas para documentos digitalizados.
+ Agentes de teste com IA: integração de LLMs locais com Playwright para automação mais resiliente.
+ CI/CD local: validação de pipelines de teste via GitHub Actions local (ACT) para feedback rápido.
+FORMAÇÃO E IDIOMAS
+Graduação em Inteligência Artificial e Aprendizado de Máquina - Unicesumar (em andamento) | Início: Fev/2025
+Idiomas: Português (nativo) | Inglês (intermediário - leitura técnica e documentação)
+(score=1.370)
+
+Thiago Neves.pdf:  IA aplicada a QA (P&D): Python, LLMs locais | geração/validação inteligente de massa (OCR/SQL)
+EXPERIÊNCIA
+Fundação Cesgranrio - Analista de Qualidade de Software (QA) | 2020 - Atual | Rio de Janeiro, RJ
+ Planejamento e execução de testes exploratórios e UAT para validação de regras de negócio complexas em
+sistemas críticos.
+ Planejamento e execução de testes de carga distribuídos em cluster de 5 VMs (Azure), identificando
+gargalos e limites da aplicação.
+ Internalização da operação de performance (antes terceirizada), aumentando autonomia do time e reduzindo
+dependências externas.
+ Monitoramento e análise de execuções com Grafana + InfluxDB, acompanhando erros e latência em tempo
+real.
+ Estratégias para geração e controle de massa de dados, garantindo repetibilidade dos testes.
+ Destaques (cenário brando): ~1500 iterações/min; p95 ~1s e p99 ~2s; think time 500-750ms (dependente do
+cenário e do sistema).
+PROJETOS (PORTFÓLIO)
+ Validador de acurácia de OCR (Python): cálculo de CER/WER e métricas para documentos digitalizados.
+ Agentes de teste com IA: integração de LLMs locais com Playwright para automação mais resiliente.
+(score=1.568)
+
+Thiago Neves.pdf: THIAGO HENRIQUE DUARTE NEVES
+QA Engineer | Performance & Reliability | Automação | IA aplicada à Qualidade
+Rio de Janeiro - RJ | (21) 96550-4784 | thdn_@hotmail.com | linkedin.com/in/thiago-henrique-duarte-neves
+RESUMO
+QA Engineer com 5+ anos de experiência, com atuação sólida em estratégia de testes (Pirâmide + Shift-left) e
+engenharia de performance e confiabilidade. Histórico de internalização de testes de carga e estruturação de
+ambiente distribuído em nuvem (Azure/VMs Windows). Combina qualidade funcional (UAT/exploratórios) com
+automação e IA para aumentar eficiência e ROI.
+COMPETÊNCIAS TÉCNICAS
+ Tipos de teste: funcionais; não funcionais (carga/stress); UAT; exploratórios baseados em risco
+ Estratégia QA: pirâmide (Unit > Integração > E2E) | Shift-left
+ Performance: JMeter (distributed), k6, Locust | tuning JVM | análise de limites
+ Observabilidade: Grafana, InfluxDB | logs e métricas de infra (Azure/Windows)
+ IA aplicada a QA (P&D): Python, LLMs locais | geração/validação inteligente de massa (OCR/SQL)
+EXPERIÊNCIA
+Fundação Cesgranrio - Analista de Qualidade de Software (QA) | 2020 - Atual | Rio de Janeiro, RJ
+(score=1.670)
+</context_data>
+
+<chat_history>
+Usuário: me de um novo codigo
+Assistente: Claro! Aqui vai um novo código HTML — dessa vez, um pouco mais interessante, com um formulário simples e um botão que exibe uma mensagem ao ser clicado:
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário Simples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            color: #333;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #mensagem {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Meu Formulário Simples</h2>
+    <form id="meuForm">
+        <input type="text" placeholder="Digite algo..." id="entrada" required>
+        <button type="submit">Enviar</button>
+    </form>
+    <div id="mensagem">Mensagem: Você enviou algo interessante! 🎉</div>
+
+    <script>
+        document.getElementById('meuForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const mensagem = document.getElementById('mensagem');
+            mensagem.textContent = "Mensagem: Você enviou algo interessante! 🎉";
+            mensagem.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
+```
+
+💡 **O que esse código faz?**
+- Cria uma página com um formulário de texto e um botão.
+- Ao clicar no botão, aparece uma mensagem de sucesso (sem enviar dados de verdade, apenas para demonstração).
+- Tem um pouco de estilo com CSS para deixar mais bonito.
+- Usa JavaScript para reagir ao clique — sem precisar de backend.
+
+Se quiser algo mais complexo, funcional ou com base em projetos que mencionei no contexto (como IA, OCR, automação), posso adaptar! 😊
+
+Quer que eu te mostre algo específico?
+</chat_history>
+
+<user_query>
+me de um novo codigo
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

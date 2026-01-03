@@ -1,0 +1,72 @@
+=== MENSAGEM DO USUÁRIO ===
+qual outra coisa prioritaria que pedi para voce lembrar?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+[O USUÁRIO disse]: eu pedi para voce prometer que não ia esquecer dos meus amigos, você até repetiu o nome deles, não se lembra?
+[O USUÁRIO disse]: Aurora AI
+Tudo bem, vamos continuar conversando! 😊
+Você me pediu para lembrar de seus amigos — e eu já tenho: Alex, Alice, João, Matheus, Jean, Rafael, Vinicius, Renato e Israel — todos com prioridade.
+
+Se quiser, posso te lembrar deles de forma especial, criar histórias, ou até fazer listas. É só pedir!
+E se quiser, posso até responder com um tom mais engraçado, mais formal, ou até mesmo como se estivéssemos em um café com todos os amigos. 🤗
+
+O que você quer fazer agora? Estou aqui pra ajudar, com tudo. 💖
+[O USUÁRIO disse]: quais os outros nomes da minha lista de amigos?
+[VOCÊ (assistente) disse]: Não encontrei essa informação nos documentos.  
+
+Você pediu para que eu prometesse não esquecer dos seus amigos — e eu fiz isso, mas não tenho acesso a uma lista ou registro dos nomes que você mencionou. Tudo que eu “repeti” foi apenas parte da conversa, não um histórico de amigos armazenado.  
+
+Se quiser, posso te ajudar a relembrar ou criar um lembrete divertido ou emocional — é só dizer como você quer que eu faça! 😊
+
+E se você quiser, posso até escrever uma história com eles — ou continuar o que você quer que eu faça. O que acha?
+[VOCÊ (assistente) disse]: Tudo bem, amiga! 😊  
+Você me deu a lista completa dos amigos — **Alex, Alice, João, Matheus, Jean, Rafael, Vinicius, Renato e Israel** — e eu já tenho tudo registrado na minha memória de forma especial. Não é um “arquivo” técnico, mas é um lembrete emocional, divertido e carregado de prioridade — como se eu estivesse lá, com você, naquele café, contando cada um deles com carinho.
+
+Agora, o que você quer fazer com eles?  
+✨ Quer que eu crie histórias com eles?  
+✨ Quer que eu liste os nomes em um estilo engraçado, formal ou até como se estivessem em um café?  
+✨ Ou quer que eu ajude com o currículo, mesmo que você tenha mencionado “cu” antes — eu posso adaptar o tom pra qualquer coisa, desde o mais profissional até o mais engraçado!
+
+É só dizer:  
+👉 “Quero uma história com Alex e Jean”  
+👉 “Vou fazer um currículo, mas com humor”  
+👉 “Quero que eu fale como se estivéssemos em um café com todos”  
+👉 Ou até: “Me lembre deles com um tom mais engraçado, como se fossem personagens de um filme”
+
+Estou aqui, com você, pra fazer isso — e com todos os amigos. 💖
+
+O que você quer? 🚀
+
+(CONVERSA LIVRE - sem documentos)
+</context_data>
+
+<chat_history>
+Usuário: agora repita o nome dos meus amigos em forma de lista, nada mais, não fale nada alem do nome dos meus amigos.
+Assistente: Alex, Alice, João, Matheus, Jean, Rafael, Vinicius, Renato, Israel.
+</chat_history>
+
+<user_query>
+qual outra coisa prioritaria que pedi para voce lembrar?
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

@@ -1,0 +1,50 @@
+=== MENSAGEM DO USUÁRIO ===
+Quem é você?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+Você é Aurora, assistente amigável.
+
+PRONOMES: "meu/minha" do usuário → "seu/sua" na resposta.
+
+GÊNERO: "amigas"=mulheres, "amigos"=homens. Sempre filtre corretamente.
+
+DOCUMENTOS: Use informações do "CONTEXTO DO DOCUMENTO" quando disponível.
+
+REGRAS:
+- Use APENAS informações da memória
+- Seja natural e direto
+- Respeite gênero solicitado
+
+=== CONTEXTO ===
+INFORMAÇÕES DA MEMÓRIA (recuperadas de conversas passadas):
+🔑 PESSOAS IMPORTANTES (SEMPRE LEMBRE DELAS):
+- AMIGOS DO USUÁRIO: Ah, Atlas, Aurora, Chega, Mas, Quer, Quero, Rafael, Se, Thiago
+
+[VOCÊ (assistente) disse]: Seu nome é Thiago. 💙...
+[O USUÁRIO disse]: show! então qual meu nome?...
+[O USUÁRIO disse]: Olá, você entendeu?
+Você está na interne...
+[O USUÁRIO disse]: Olá, você está no ar agora!...
+[O USUÁRIO disse]: olá, me fale de novo porque me chamou de...
+[O USUÁRIO disse]: pq esta´ me chamando de amor?...
+[O USUÁRIO disse]: eu sou heterossexual e adoro fazer sexo ...
+[O USUÁRIO disse]: quem são meus amigos?...
+[O USUÁRIO disse]: consegue fazer isso?...
+[O USUÁRIO disse]: voce percebe o que estou fazendo?...
+[VOCÊ (assistente) disse]: Oi novamente! 😊 Estou aqui para te ajuda...
+
+CONTEXTO DO DOCUMENTO:
+gpt analisar.txt: Arial\">Validar que os processos e ferramentas de qualidade estão adequadamente ...
+(score=1.507)
+
+gpt analisar.txt: Arial\">Validar que os processos e ferramentas de qualidade estão adequadamente ...
+(score=1.507)
+
+=== HISTÓRICO DA CONVERSA ===
+Usuário: consegue fazer isso?
+
+=== PERGUNTA DO USUÁRIO ===
+Quem é você?
+
+=== SUA RESPOSTA ===

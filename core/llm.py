@@ -82,7 +82,7 @@ def initialize_llm():
                 base_url=LM_STUDIO_URL,
                 api_key="lm-studio",
                 temperature=0.0,
-                max_tokens=15000,
+                max_tokens=150000,
                 streaming=False
             )
             print("⚠️ [LLM] Inicializado sem modelo específico (fallback).")

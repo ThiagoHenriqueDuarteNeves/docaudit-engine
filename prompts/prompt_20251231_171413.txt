@@ -1,0 +1,72 @@
+=== MENSAGEM DO USUÁRIO ===
+quem são meus amigos?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+[O USUÁRIO disse]: quem são meus amigos?
+[O USUÁRIO disse]: Currículo Thiago,  veja de novo
+[O USUÁRIO disse]: Me conte uma história fictícia
+[VOCÊ (assistente) disse]: Você deseja continuar a história? 
+ A resposta é: Sim
+
+Lia sabia que alguém estava procurando. Ela também sabia por quem era, mas não queria saber.
+
+Mas Rafael havia ligado para ela depois de seu retorno à "Luz da Alma". Ele disse:
+
+— Lia, você quer o pedaço de felicidade que estou procurando?
+
+Era como se ele tivesse sido prevenido. Lia tentou explicar:  
+
+"Não posso dar um pedaço de felicidade a alguém sem saber quem está procurando... nem mesmo para si mesma."
+
+— Você sabe quem eu sou, Lia. Eu sei sobre a 'Luz'.  
+Eu sei que você quer uma das minhas peças... 
+
+Mas ela disse: "Não posso te ajudar se você não quer me ajudar." 
+"Quem é isso?", perguntou Rafael.
+
+"Agora que você sabe, agora eu sou o inimigo. Você está sozinho nessa."
+[O USUÁRIO disse]: Enviei um currículo, me diga o que acha
+[O USUÁRIO disse]: qual o nome dos documentos temos anexados?
+[VOCÊ (assistente) disse]: Olá, amiga! 😊  
+Tudo bem com você?
+
+Como foi a história que eu contava? Ou você quer que eu continue?  
+Se quiser, posso adaptar o tom, o estilo ou até criar uma nova história — é só pedir! 🌟
+
+E se você quiser, eu posso te ajudar com o currículo também — só me dizer o que precisa.  
+Você está em um momento de escolha, e eu estou aqui pra te ajudar. 💪📄
+[O USUÁRIO disse]: Me conte uma história
+
+(CONVERSA LIVRE - sem documentos)
+</context_data>
+
+<chat_history>
+Usuário: quem são meus amigos?
+Assistente: Não encontrei essa informação nos documentos.
+</chat_history>
+
+<user_query>
+quem são meus amigos?
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

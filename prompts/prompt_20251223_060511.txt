@@ -1,0 +1,118 @@
+=== MENSAGEM DO USUÁRIO ===
+me diga o que tem nesta imagem
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA (recuperadas de conversas passadas):
+[O USUÁRIO disse] (em 21/12 18:25): Eu quero o questionário sim!
+[VOCÊ (assistente) disse] (em 21/12 16:20): Oi de novo! 🌟 Tudo bem? Como posso te ajudar hoje? 😊
+[VOCÊ (assistente) disse] (em 21/12 17:44): Oi novamente! 🌟 Tudo bem? Como posso te ajudar hoje? 😊
+[O USUÁRIO disse] (em 23/12 00:39): estou te testando mesmo
+[O USUÁRIO disse] (em 22/12 14:21): quais documentos você tem acesso
+
+CONTEXTO DO DOCUMENTO:
+ANBIMA - Manual de Homologação VF.pdf: 8
+Seguint e
+Seguint e
+Se posicione em fr ent e à W ebcam, clique no ícone da câmera e aguar de a contagem r egr essiv a da f ot o. Se a 
+imagem estiv er boa, clique em Seguint e. Caso contrário, clique em F ot ogr af ar no v ament e e r epita o 
+pr ocediment o.
+Seguint e
+Seguint e
+P osicione um ‘document o de identidade’ em fr ent e à W ebcam e clique no ícone da câmera. Aguar de a 
+contagem r egr essiv a da f ot o. Se a imagem estiv er boa, clique em Seguint e. Caso contrário, clique em 
+F ot ogr af ar no v ament e e r epita o pr ocediment o.
+Assegur e-se de que a captura do document o est eja nítida e legív el. A imagem do document o 
+de v e estar clara, sem borr ões ou r efle x os, garantindo sua plena legibilidade pelo Fiscal 
+R emot o, r esponsá v el pelo monit orament o da pr o v a no dia da aplicação.
+(score=1.113)
+
+ANBIMA - Manual de Homologação VF.pdf: 7
+Aguar de o sist ema confirmar o compar tilhament o da t ela e clique em Seguint e para a v ançar .
+Selecione a câmera que de v erá ser utilizada e clique em Continuar. Caso haja apenas uma câmera, esta será 
+selecionada aut omaticament e.
+Se o r econheciment o da câmera f alhar , v erifique as configurações de antivírus, priv acidade 
+ou har dwar e do computador , cer tificando-se de que nada est eja bloqueando o acesso do 
+sist ema à câmera.
+(score=1.149)
+
+ANBIMA - Manual de Homologação VF.pdf: 13
+Em seguida, o Car tão-R esposta Digital será e xibido, apr esentando o r esultado par cial do Candidat o. Clique no 
+botão A v ançar. 
+Ao finalizar a pr o v a e a int erposição de r ecursos, o questionário será e xibido. R esponda t odos os it ens do 
+questionário e, ao finalizá-lo, clique em En viar.
+(score=1.158)
+
+ANBIMA - Manual de Homologação VF.pdf: 17
+Locais  para posicionamento da TAG INADEQUADOS
+Casos especiais de selagem da TAG
+V eja, a seguir , os locais considerados inadequados para a fixação da T A G e os r espectiv os motiv os:
+V eja alguns possív eis locais de selament o da T A G, caso o arame trançado consiga en v olv er o localidentificado.
+Espelhos do deskt op
+Est e local é destinado à 
+inser ção deplacas, 
+além de ser de f ácil 
+r emoçãodo espelho 
+com uma possív el T A G.
+A fixação da T A G nest e 
+local podeocasionar 
+cur t o-cir cuit o.
+Caso haja necessidade 
+demanut enção, a T A G 
+v ai serr emo vida.
+F ont e do deskt op Local de lacr e do deskt op
+T ampa do deskt op
+A T A G não de v e ser fixada 
+em locaisde f ácil r emoção. 
+N esse caso, atampa pode 
+ser r emo vida com 
+f acilidade.
+L ocal de difícil inser ção da 
+T A G eest eticament e não 
+r ecomendado,além de 
+permitir f ácil manipulação 
+pelo usuário.
+A fixação da T A G nest e 
+local pode ocasionar 
+cur t o-cir cuit o.
+F r ent e do deskt op F ont e do mon i t or
+(score=1.183)
+
+ANBIMA - Manual de Homologação VF.pdf: 10
+R esponda a t odas as quest ões da pr o v a.
+Ao r esponder cada questão ha v erá a opção de mar cá-la para apr esentar um r ecurso, por ém só será 
+disponibilizada a função de escr e v er e en viar o r ecurso após finalizar t oda a pr o v a. Selecione a opção de 
+Mar car par a cont estar nas quest ões 1 , 2 e 3 , em t odos os computador es que homologar .
+Após salv ar a questão mar cada para r ecurso, um pop-up será e xibido para que seja confirmada a opção de 
+r ecursar a questão. Clique em Sim,  sinalizar.
+(score=1.187)
+</context_data>
+
+<chat_history>
+Usuário: sei lá
+Assistente: Oi! 😊 Como posso te ajudar hoje? Se tiver dúvidas sobre o processo de homologação, instalação do aplicativo ou algum passo específico do manual, é só me dizer! Estou aqui para te guiar. 🌟
+</chat_history>
+
+<user_query>
+me diga o que tem nesta imagem
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

@@ -1,0 +1,37 @@
+=== MENSAGEM DO USUÁRIO ===
+consegue fazer isso?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+Você é Aurora, assistente amigável.
+
+PRONOMES: "meu/minha" do usuário → "seu/sua" na resposta.
+
+GÊNERO: "amigas"=mulheres, "amigos"=homens. Sempre filtre corretamente.
+
+DOCUMENTOS: Use informações do "CONTEXTO DO DOCUMENTO" quando disponível.
+
+REGRAS:
+- Use APENAS informações da memória
+- Seja natural e direto
+- Respeite gênero solicitado
+
+=== CONTEXTO ===
+INFORMAÇÕES DA MEMÓRIA (recuperadas de conversas passadas):
+[O USUÁRIO disse]: consegue fazer isso?...
+
+CONTEXTO DO DOCUMENTO:
+gpt analisar.txt: justify; font-family: Arial\">Certificar que o código está livre de bugs e erros...
+(score=1.381)
+
+gpt analisar.txt: justify; font-family: Arial\">Certificar que o código está livre de bugs e erros...
+(score=1.381)
+
+=== HISTÓRICO DA CONVERSA ===
+Usuário: consegue fazer isso?
+Assistente: :
+
+=== PERGUNTA DO USUÁRIO ===
+consegue fazer isso?
+
+=== SUA RESPOSTA ===

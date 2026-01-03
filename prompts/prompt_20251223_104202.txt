@@ -1,0 +1,121 @@
+=== MENSAGEM DO USUÁRIO ===
+O que me diz desta foto?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA (recuperadas de conversas passadas):
+[VOCÊ (assistente) disse] (em 23/12 10:40): Essa foto transmite uma atmosfera de **conexão, alegria e convivência familiar ou entre amigos próximos**.
+
+Aqui está o que ela me diz:
+
+1.  **Momento de lazer e reunião**: As pessoas estão sentadas em uma mesa de restaurante, com talheres e uma garrafa de azeite, sugerindo que estão em um café ou refeição. A expressão de todos, especialmente o homem no primeiro plano que está tirando a foto (selfie), indica que é um momento de lazer e celebração.
+
+2.  **Relação afetiva e diversidade de idades**: O grupo é composto por quatro pessoas, com diferentes idades e estilos de vestuário. A mulher mais velha, à direita, sorri com calor; a mulher mais nova, no centro, também sorri amplamente; a mulher ao fundo tem uma expressão mais calma e pensativa; e o homem, que parece ser o organizador da foto, está sorrindo para a câmera. Isso sugere uma dinâmica de família ou grupo de amigos que se apoiam e se respeitam.
+
+3.  **Estilo de vida e personalidade**: Os trajes são coloridos e descontraídos — estampas tropicais e roupas leves — o que reflete um estilo de vida descontraído e vibrante. A presença de um azeite, um ingrediente comum em muitos países, pode indicar que o local é um restaurante com cozinha mediterrânea ou que a refeição é saudável e leve.
+
+4.  **Ambiente acolhedor**: O fundo, com paredes de tijolos expostos e uma iluminação natural, sugere um ambiente acolhedor e moderno, talvez em um restaurante com decoração industrial ou rústica.
+
+Em resumo, esta foto é uma celebração do lazer, da família ou da amizade, capturando um momento de alegria e conexão entre pessoas que se importam umas com as outras. É uma imagem que transmite calor humano e a beleza de um momento compartilhado.
+[O USUÁRIO disse] (em 23/12 06:05): me diga o que tem nesta imagem
+[VOCÊ (assistente) disse] (em 23/12 08:09): A pessoa na foto é **Layla**.
+
+Ela é uma modelo e influenciadora digital conhecida por seu estilo ousado, tatuagens e presença nas redes sociais, especialmente no TikTok e Instagram. A imagem mostra-a com um crânio decorado com strass, um dos seus itens de moda ou acessórios mais reconhecíveis. Layla é originária da Califórnia e tem se tornado cada vez mais popular nos últimos anos, especialmente por sua estética e conteúdo voltado para o público jovem.
+
+CONTEXTO DO DOCUMENTO:
+ANBIMA - Manual de Homologação VF.pdf: 7
+Aguar de o sist ema confirmar o compar tilhament o da t ela e clique em Seguint e para a v ançar .
+Selecione a câmera que de v erá ser utilizada e clique em Continuar. Caso haja apenas uma câmera, esta será 
+selecionada aut omaticament e.
+Se o r econheciment o da câmera f alhar , v erifique as configurações de antivírus, priv acidade 
+ou har dwar e do computador , cer tificando-se de que nada est eja bloqueando o acesso do 
+sist ema à câmera.
+(score=1.042)
+
+ANBIMA - Manual de Homologação VF.pdf: 8
+Seguint e
+Seguint e
+Se posicione em fr ent e à W ebcam, clique no ícone da câmera e aguar de a contagem r egr essiv a da f ot o. Se a 
+imagem estiv er boa, clique em Seguint e. Caso contrário, clique em F ot ogr af ar no v ament e e r epita o 
+pr ocediment o.
+Seguint e
+Seguint e
+P osicione um ‘document o de identidade’ em fr ent e à W ebcam e clique no ícone da câmera. Aguar de a 
+contagem r egr essiv a da f ot o. Se a imagem estiv er boa, clique em Seguint e. Caso contrário, clique em 
+F ot ogr af ar no v ament e e r epita o pr ocediment o.
+Assegur e-se de que a captura do document o est eja nítida e legív el. A imagem do document o 
+de v e estar clara, sem borr ões ou r efle x os, garantindo sua plena legibilidade pelo Fiscal 
+R emot o, r esponsá v el pelo monit orament o da pr o v a no dia da aplicação.
+(score=1.155)
+
+ANBIMA - Manual de Homologação VF.pdf: 13
+Em seguida, o Car tão-R esposta Digital será e xibido, apr esentando o r esultado par cial do Candidat o. Clique no 
+botão A v ançar. 
+Ao finalizar a pr o v a e a int erposição de r ecursos, o questionário será e xibido. R esponda t odos os it ens do 
+questionário e, ao finalizá-lo, clique em En viar.
+(score=1.167)
+
+ANBIMA - Manual de Homologação VF.pdf: Arma z enament o
+Micr o f one
+1 0 G B de espaço livr e ( SS D r ecomendado )
+C onecti v idade
+ Int ernet dedicada com v elocidade mínima de 1 0  Mbps ( do w nload e upload), 
+por máquina, pr ef er encialment e via r ede cabeada
+W e b cam
+ Int egrada ou e xt erna, com r esolução mínima de 720 p
+Monit or
+ 1 2 8 0 x 720  ( H D) ou superior
+Int egrado ou e xt erno, com qualidade adequada para captação de v oz
+requisitos mínimos de infraestrutura
+APRESENT AÇÃO
+(score=1.260)
+
+ANBIMA - Manual de Homologação VF.pdf: 18
+BAIXANDO O APP
+1.1 NO ANDROID
+Bas ta b aixar o aplic ativ o REL A T ÓRIO DIGIT AL D A APLICA ÇÃ O no Pla y S t or e e abri-lo ems e guida.
+instalação  do  aplicativo  relatório  digital  
+da  aplicação
+(score=1.260)
+</context_data>
+
+<chat_history>
+Usuário: O que me diz desta foto.
+Assistente: Essa foto transmite uma atmosfera de **conexão, alegria e convivência familiar ou entre amigos próximos**.
+
+Aqui está o que ela me diz:
+
+1.  **Momento de lazer e reunião**: As pessoas estão sentadas em uma mesa de restaurante, com talheres e uma garrafa de azeite, sugerindo que estão em um café ou refeição. A expressão de todos, especialmente o homem no primeiro plano que está tirando a foto (selfie), indica que é um momento de lazer e celebração.
+
+2.  **Relação afetiva e diversidade de idades**: O grupo é composto por quatro pessoas, com diferentes idades e estilos de vestuário. A mulher mais velha, à direita, sorri com calor; a mulher mais nova, no centro, também sorri amplamente; a mulher ao fundo tem uma expressão mais calma e pensativa; e o homem, que parece ser o organizador da foto, está sorrindo para a câmera. Isso sugere uma dinâmica de família ou grupo de amigos que se apoiam e se respeitam.
+
+3.  **Estilo de vida e personalidade**: Os trajes são coloridos e descontraídos — estampas tropicais e roupas leves — o que reflete um estilo de vida descontraído e vibrante. A presença de um azeite, um ingrediente comum em muitos países, pode indicar que o local é um restaurante com cozinha mediterrânea ou que a refeição é saudável e leve.
+
+4.  **Ambiente acolhedor**: O fundo, com paredes de tijolos expostos e uma iluminação natural, sugere um ambiente acolhedor e moderno, talvez em um restaurante com decoração industrial ou rústica.
+
+Em resumo, esta foto é uma celebração do lazer, da família ou da amizade, capturando um momento de alegria e conexão entre pessoas que se importam umas com as outras. É uma imagem que transmite calor humano e a beleza de um momento compartilhado.
+</chat_history>
+
+<user_query>
+O que me diz desta foto?
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

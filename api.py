@@ -54,11 +54,13 @@ origins = [
     "http://localhost:5174",
     "http://localhost:8000",
     "http://localhost:8081",
+    "http://localhost:5500",
     "http://127.0.0.1:8000",
     "http://127.0.0.1:8081",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
+    "http://127.0.0.1:5500",
     "http://localhost:3002",
     "http://127.0.0.1:3002",
     "https://aurora.share.zrok.io",          # Produção Zrok
@@ -152,11 +154,14 @@ class AnalyzeRequest(BaseModel):
     analysis_type: str
     question: Optional[str] = None
     max_items_per_category: Optional[int] = 5
+    scan_all: bool = False
+    scan_batch_size: int = 12
+    scan_passes: int = 1
+    debug_llm: bool = False
 
 # ============================================================================
 # ENDPOINTS - CHAT
 # ============================================================================
-
 @app.post("/api/debug/context", response_model=DebugResponse)
 async def generate_debug_context(request: ChatMessage, user_memory: ConversationMemory = Depends(get_memory)):
     """
@@ -225,7 +230,11 @@ async def analyze_endpoint(request: AnalyzeRequest):
             document_ids=request.document_ids,
             analysis_type=request.analysis_type,
             question=request.question,
-            max_items_per_category=request.max_items_per_category or 5
+            max_items_per_category=request.max_items_per_category,
+            scan_all=request.scan_all,
+            scan_batch_size=request.scan_batch_size,
+            scan_passes=request.scan_passes,
+            debug_llm=request.debug_llm
         )
         
         if "error" in result:

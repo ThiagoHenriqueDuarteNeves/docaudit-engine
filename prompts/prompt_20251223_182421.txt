@@ -1,0 +1,128 @@
+=== MENSAGEM DO USUÁRIO ===
+e nesta imagem, quem é pessoa nela?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA (recuperadas de conversas passadas):
+[VOCÊ (assistente) disse] (em 23/12 12:01): Essa imagem mostra um **carrinho de compras** (ou cesto de compras) cheio de itens, provavelmente após uma compra em um supermercado ou mercado.
+
+Os itens visíveis no carrinho incluem:
+
+*   **Vários tipos de vinho**: Há garrafas de vinho tinto, branco e rosé, com marcas como "Santa Ema" e "Camino del Valle".
+*   **Frutas**: Dois grandes frutos verdes, que parecem ser **mamões** (ou talvez **coco** ou **abacate**), e algumas frutas menores, como **maçãs** ou **pêras**, envolvidas em plástico.
+*   **Outros produtos**: Um recipiente de plástico transparente com um líquido vermelho (pode ser suco ou outro tipo de bebida), e um objeto metálico envolto em papel alumínio.
+
+No canto inferior esquerdo, vemos os pés de uma pessoa com um tênis e uma calça com estampa floral, indicando que a foto foi tirada do ponto de vista da pessoa que está carregando o carrinho.
+
+**Em resumo, é um carrinho de compras com uma compra de alimentos e bebidas.**
+[O USUÁRIO disse] (em 23/12 18:22): o que é isso na foto?
+
+CONTEXTO DO DOCUMENTO:
+ANBIMA - Manual de Homologação VF.pdf: 8
+Seguint e
+Seguint e
+Se posicione em fr ent e à W ebcam, clique no ícone da câmera e aguar de a contagem r egr essiv a da f ot o. Se a 
+imagem estiv er boa, clique em Seguint e. Caso contrário, clique em F ot ogr af ar no v ament e e r epita o 
+pr ocediment o.
+Seguint e
+Seguint e
+P osicione um ‘document o de identidade’ em fr ent e à W ebcam e clique no ícone da câmera. Aguar de a 
+contagem r egr essiv a da f ot o. Se a imagem estiv er boa, clique em Seguint e. Caso contrário, clique em 
+F ot ogr af ar no v ament e e r epita o pr ocediment o.
+Assegur e-se de que a captura do document o est eja nítida e legív el. A imagem do document o 
+de v e estar clara, sem borr ões ou r efle x os, garantindo sua plena legibilidade pelo Fiscal 
+R emot o, r esponsá v el pelo monit orament o da pr o v a no dia da aplicação.
+(score=0.896)
+
+ANBIMA - Manual de Homologação VF.pdf: 11
+Após mar car as quest ões para r ecurso, utiliz e as funções disponív eis de planilha, calculadora e rascunho ( em 
+t odos os computador es sendo homologados) para se cer tificar que t odas estão operant es.
+Após e x ecutar as funções de planilha, calculadora e rascunho, e salv ar as quest ões para r ecursar , acesse o 
+mapa de quest ões, ant es de finalizar a pr o v a, para conf erir suas mar cações. 
+As quest ões ainda não r espondidas ou mar cadas para r esposta ou r ecurso apar ecerão sinalizadas no mapa de 
+quest ões. Clique em Finalizar Pr o v a. Em seguida, um pop-up será e xibido para que seja confirmada a 
+finalização da pr o v a.
+
+
+Mapa de quest ões
+Nome pr o v a
+01
+A
+02
+A
+03
+B
+04
+05
+A
+xx
+Questão visualizada xx
+Questão atual Questão mar cada par a contestação Questão mar cada
+Ret ornar à pr o v a Finalizar pr o v a
+(score=1.048)
+
+ANBIMA - Manual de Homologação VF.pdf: 12
+Após a finalização da pr o v a, o sist ema e xibirá quais quest ões f oram mar cadas para cont estação. Clique no 
+númer o da questão para int erpor o r ecurso.
+Uma janela apar ecerá para que seja escrit o o r ecurso. Mar que uma opção de r esposta, escr e v a um t e xt o 
+na caixa e clique em salv ar. Após salv ar t odos os r ecursos, clique em Solicitar, na t ela ant erior .
+(score=1.073)
+
+ANBIMA - Manual de Homologação VF.pdf: 7
+Aguar de o sist ema confirmar o compar tilhament o da t ela e clique em Seguint e para a v ançar .
+Selecione a câmera que de v erá ser utilizada e clique em Continuar. Caso haja apenas uma câmera, esta será 
+selecionada aut omaticament e.
+Se o r econheciment o da câmera f alhar , v erifique as configurações de antivírus, priv acidade 
+ou har dwar e do computador , cer tificando-se de que nada est eja bloqueando o acesso do 
+sist ema à câmera.
+(score=1.076)
+
+ANBIMA - Manual de Homologação VF.pdf: 5
+Além de v erificar os r equisit os mínimos, o Na v egador Segur o det ectará e inf ormará sobr e qualquer pr ograma 
+que est eja aber t o, conf orme o pop-up a seguir . Clique em Sim para encerrar os pr ogramas e continuar .                                                                              
+Em seguida, o sist ema e xibirá as inf ormações para r egistr o da máquina. Selecione o nome do laborat ório, caso 
+haja mais de um a ser homologado no Centr o de T est es. O nome do computador será pr eenchido 
+aut omaticament e de acor do com o nome da máquina definido no sist ema operacional. 
+Caso seja mais f ácil identificar os computador es por meio do nome de patrimônio ou alguma r ef er ência já 
+utilizada no laborat ório, é possív el editá-lo, clicando no ícone do lápis, ao lado dir eit o do r espectiv o campo.  
+Ao finalizar , clique em R ealizar homologação para acessar ao ambient e de pr o v a.
+O nome do computador cadastrado será utilizado para coletar dados t écnicos da máquina. 
+Em caso de necessidade de contat o para tratar qualquer pr oblema, o computador será 
+identificado por essa designação.
+(score=1.083)
+</context_data>
+
+<chat_history>
+Usuário: o que é isso na foto?
+Assistente: Na foto, está o **logotipo da Netflix**.
+
+É o famoso símbolo vermelho da plataforma de streaming, que é reconhecido mundialmente. O texto "NETFLIX" está escrito em letras maiúsculas, em uma fonte sans-serif, e é exibido sobre um fundo preto ou muito escuro.
+
+Esse logotipo é usado em diversos contextos, como na tela de abertura da aplicação, em anúncios, na embalagem de produtos e em qualquer lugar onde a marca da Netflix precisa ser representada.
+
+A imagem que você enviou é, na verdade, uma captura de tela do logotipo da Netflix, provavelmente da tela de login ou de carregamento da plataforma.
+</chat_history>
+
+<user_query>
+e nesta imagem, quem é pessoa nela?
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

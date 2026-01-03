@@ -1,0 +1,101 @@
+=== MENSAGEM DO USUÁRIO ===
+Thiago
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+[O USUÁRIO disse]: Currículo Thiago,  veja de novo
+[VOCÊ (assistente) disse]: Ah, Thiago, eu vou te ajudar com o currículo! 😊  
+Mas preciso que você me envie o conteúdo do currículo — ou pelo menos os pontos principais — porque, como disse antes, eu não tenho acesso a arquivos ou documentos externos.  
+
+É só mandar o texto, ou me dizer o que ele tem de mais relevante:  
+- Experiência profissional  
+- Habilidades técnicas ou comportamentais  
+- Formação acadêmica  
+- Projetos ou conquistas  
+- Qualquer outro detalhe que você quer que eu analise  
+
+Vou te dar feedback com base no que você me enviar — e posso até sugerir melhorias, ajustes ou estrutura para deixar o currículo mais impactante!  
+
+Só me enviar o conteúdo, e eu estou aqui pra ajudar. 💪📄
+[VOCÊ (assistente) disse]: Ah, Thiago... você quer continuar nessa vibe intensa? Vou adotar seu tom informal e cheio de energia pra nos divertirmos com isso.
+
+Se quiser:
+- Eu posso transformar nossa conversa em uma história fictícia sobre alguém que domina "ataques diretos" (rs).
+- Ou eu faço um pitch engraçado pra um vídeo curto pra redes sociais.
+- Ou só continuamos conversando sem pressão, como estamos fazendo agora.
+
+Quer que eu continue assim pra brincadeira? 😏  
+Ou prefere voltar a algo mais profissional (mas ainda com leveza)?
+[VOCÊ (assistente) disse]: “Teste” — parece que você está testando o sistema, ou talvez queira algo específico.
+
+Se você quiser:
+
+- Uma história fictícia nova? 📖
+- O currículo de Thiago Neves em formato HTML ou PDF? 📄
+- Ajuda com o código que eu enviei? 🧩
+- Ou só quer saber o que está no contexto?
+
+É só dizer — eu estou aqui pra ajudar, com tudo, de qualquer forma. 😊
+
+E se quiser, posso até fazer um “teste” de IA aplicada à QA, com base no perfil de Thiago — só pedir! 💡
+[VOCÊ (assistente) disse]: Ah, Thiago quer história fictícia pra nos divertirmos — ótimo! Vou colocar toda essa vibe de "forçando o pau até o talo" pra funcionar como inspiração para uma narrativa épica. Aqui vai um conceito leve mas cheio de drama técnico:
+
+---
+
+**Título:** *“O ATAQUE DOS CÓDIGOS NÃO CIRCULARES”*
+
+**Personagens:์**
+- **Thiago**: Um desenvolvedor frontend altamente pragmático, que acredita firmemente em UX intuitiva e designs limpos. Tem um olhar agressivo quando vê layout mal alinhado.
+- **Maya**: Back-end enthusiasta, fã de microservices e arquitetura robusta. Vê o mundo em fluxos de dados e redundâncias.
+- **Chefe**: Um executivo que entende só de KPIs, reuniões sem foco e “soluções rápidas”.
+
+**Sinopse:์**
+Em 2035, a gigantesca empresa *NexaWeb* vive em paz até o dia em que o novo layout da homepage começa a travar em 89% dos navegadores. O problema? Thiago inventou um layout “limpo” sem usar flexbox — só grid + CSS absoluto. Maya diz: “É bonito, mas os layouts móveis estão fugindo do fluxo”. Chefe diz: “Tem que ser rápido pra entregar!”
+
+O drama começa quando Thiago decide “forçar o pau até o talo” na arquitetura original de 2018. Ele apaga tudo e repensa cada componente, mas não muda de comportamento em relação ao usuário final: ele ainda quer simplicidade extrema.
+
+Maya propõe um *sistema de microservices modular*, mas Thiago responde: “Se eu sou o único que entende a história do site, por que dividir?” E então surge o conflito: humanismo técnico vs eficiência escalável.
+
+**Clímax:**  
+Thiago faz uma atualização invisível — ele adiciona um novo atributo global `.nãoCircular` em todos os componentes CSS. Isso força que todo elemento tenha comportamento predeterminado “sem fugas”, sem alterar a aparência visual. O layout agora funciona em todos os dispositivos, mas mantém sua essência minimalista.
+
+**Morada:**  
+O mundo entende: às vezes, o melhor “ataque” ao caos tecnológico é um ajuste discreto no código fundamental. Thiago não precisa dominar tudo — só dominar a forma como o chaos entra na tela dele.
+
+---
+
+Se quiser eu posso expandir pra uma cena completa do vídeo de 30 segundos pra Instagram Stories, com roteiro visual e hashtags! 😎
+
+(CONVERSA LIVRE - sem documentos)
+</context_data>
+
+<chat_history>
+Usuário: qual meu nome?
+Assistente: Não encontrei seu nome nos documentos. 😔  
+Se quiser, posso te ajudar a lembrar ou criar um lembrete especial — é só dizer como você quer! 💖
+</chat_history>
+
+<user_query>
+Thiago
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

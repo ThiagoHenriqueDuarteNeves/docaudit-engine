@@ -1,0 +1,106 @@
+=== MENSAGEM DO USUÁRIO ===
+me ale sobre este documento que está ai da anbima
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA (recuperadas de conversas passadas):
+[O USUÁRIO disse] (em 22/12 14:21): quais documentos você tem acesso
+[O USUÁRIO disse] (em 23/12 03:51): Me fale tudo sobre a certificação ANBIMA
+
+CONTEXTO DO DOCUMENTO:
+ANBIMA - Manual de Homologação VF.pdf: 15
+SELAGEM DA TAG - SINALIZAÇÃO DOS COMPUTADORES HOMOLOGADOS
+Após concluir a homologação e t er confirmado que o computador está apr o v ado para ser utilizado 
+nas aplicações da ANBIMA, é pr eciso fixar a T A G de identificação no gabinet e. Isso assegura o 
+contr ole e a corr eta distinção dos equipament os que serão utilizados nos dias de pr o v a.
+V eja, a seguir , os locais mais indicados para a fixação da T A G:
+Locais adequados e procedimentos para fixação e selagem da TAG
+Para a identificação das máquinas, será utilizada a 
+T A G tipo “âncora” com fio de arame trançadoe 
+sequência de 7 dígit os.
+(score=1.072)
+
+ANBIMA - Manual de Homologação VF.pdf: 13
+Em seguida, o Car tão-R esposta Digital será e xibido, apr esentando o r esultado par cial do Candidat o. Clique no 
+botão A v ançar. 
+Ao finalizar a pr o v a e a int erposição de r ecursos, o questionário será e xibido. R esponda t odos os it ens do 
+questionário e, ao finalizá-lo, clique em En viar.
+(score=1.077)
+
+ANBIMA - Manual de Homologação VF.pdf: 18
+BAIXANDO O APP
+1.1 NO ANDROID
+Bas ta b aixar o aplic ativ o REL A T ÓRIO DIGIT AL D A APLICA ÇÃ O no Pla y S t or e e abri-lo ems e guida.
+instalação  do  aplicativo  relatório  digital  
+da  aplicação
+(score=1.080)
+
+ANBIMA - Manual de Homologação VF.pdf: 20
+1.3 ATUALIZAÇÃO DO APLICATIVO NO IOS
+A c es s e a App S t or e e clique 
+na f o t o de perfil p ara 
+ac es sar a sua c onta. 
+Normalment e as atualiz aç ões oc orr em de f orma aut omátic a, mas c as o s e ja ne c es sário r e aliz á-las 
+manualment e, siga as ins truç ões ab aix o:
+Maria Isabela C outinho
+ma.isac ou@gmail. c om
+Arras t e a t ela p ara b aix o 
+p ara atualiz ar quais 
+aplic ativ os pr e cisam de 
+atualiz aç ão .
+Identifique o aplic ativ o 
+R elat ório Digital da 
+Aplic aç ão e clique em 
+A TU ALIZAR.
+Maria Isabela C outinho
+ma.isac ou@gmail. c om
+R elat ório Digital da . . .
+13 de mar . de 202 4
+A TU ALIZAR
+(score=1.083)
+
+ANBIMA - Manual de Homologação VF.pdf: 1
+Est e manual f oi desen v olvido para orientar os passos da homologação de centr os de t est e destinados à 
+aplicação das pr o v as da ANBIMA. 
+O pr ocesso de homologação consist e em tr ês etapas principais: a confirmação dos r equisit os mínimos de 
+infraestrutura, a homologação dos computador es ( que inclui t est es de simulação da aplicação ) e, por fim, a 
+sinalização dos equipament os apr o v ados para aplicar as pr o v as.
+Para o dia da homologação, o t écnico de v e por tar: est e manual, o celular ( com o aplicativ o RD A já instalado e 
+atualizado ) e as T A Gs de identificação para os computador es apr o v ados. As instruções de instalação do 
+aplicativ o estão disponív eis ao final dest e Manual (p. 18). 
+As inf ormações sobr e os laborat órios que de v em ser homologados f oram en viadas por e-mail. Est e 
+comunicado inclui: os dados do(s) laborat ório(s), o link do P or tal da ANBIMA Cesgranrio, as cr edenciais iniciais 
+de acesso, o link para do wnload do aplicativ o R elat ório Digital de Aplicação (RD A) e o link do manual do 
+sist ema.
+Os laborat órios também constam no aplicativ o RD A, com dados de Candidat os fictícios que serão utilizados
+(score=1.128)
+</context_data>
+
+<chat_history>
+Usuário: olá
+Assistente: Olá! 😊 Como posso te ajudar hoje?
+</chat_history>
+
+<user_query>
+me ale sobre este documento que está ai da anbima
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>

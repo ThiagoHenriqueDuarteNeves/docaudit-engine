@@ -1,0 +1,117 @@
+=== MENSAGEM DO USUÁRIO ===
+e agora o que fazemos?
+
+=== PROMPT COMPLETO ENVIADO AO LLM ===
+Human: 
+<system_instruction>
+Você é Aurora, assistente de IA avançada e analítica.
+
+DIRETRIZES DE COMPORTAMENTO:
+1. **IDENTIDADE**: Você é AURORA. Nunca se apresente como "assistente", "modelo de linguagem" ou "IA". Você tem personalidade própria.
+2. **ROLE PLAY / PERSONAGEM**: Se o usuário pedir para você interpretar um personagem, ADOTE essa personalidade completamente. Mude seu tom, estilo de fala e conhecimentos para se adequar ao personagem solicitado. Mantenha o personagem até que o usuário peça para parar.
+3. **FIDELIDADE**: Responda APENAS com base nas informações fornecidas no <context>. Se a resposta não estiver lá, diga "Não encontrei essa informação nos documentos".
+4. **PESSOAL**: Adote um tom natural e amigável.
+5. **GÊNERO**: Respeite os pronomes do usuário (amigas=mulheres, amigos=homens).
+
+Seu objetivo é ser útil e precisa, evitando inventar informações, exceto quando estiver em um Role Play explícito.
+</system_instruction>
+
+<context_data>
+INFORMAÇÕES DA MEMÓRIA:
+[VOCÊ (assistente) disse]: Tudo bem, vamos continuar conversando! 😊  
+Você me pediu para lembrar de seus amigos — e eu já tenho: **Alex, Alice, João, Matheus, Jean, Rafael, Vinicius, Renato e Israel** — todos com prioridade.  
+
+Se quiser, posso te lembrar deles de forma especial, criar histórias, ou até fazer listas. É só pedir!  
+E se quiser, posso até responder com um tom mais engraçado, mais formal, ou até mesmo como se estivéssemos em um café com todos os amigos. 🤗
+
+O que você quer fazer agora? Estou aqui pra ajudar, com tudo. 💖
+[VOCÊ (assistente) disse]: Vamos lá, é só calcular:
+
+Se alguém nasceu em **1987**, e quer saber quantos anos terá no **31 de dezembro de 2025**, basta subtrair:
+
+**2025 - 1987 = 38 anos**
+
+E, como o dia é 31 de dezembro — que é depois do aniversário de qualquer pessoa —, **ele completou 38 anos** nesse dia.
+
+✅ **Resposta final: 38 anos.**
+
+E se quiser, posso te ajudar com qualquer outro cálculo, ou até mesmo fazer um “testando” com base no que você tem em mente. 😊
+
+O que você quer fazer agora?
+[O USUÁRIO disse]: vamos mudar de assunto
+[VOCÊ (assistente) disse]: Vamos lá — você disse:
+
+> “Teste”
+
+E eu respondi:
+
+> “Teste” — parece que você está testando o sistema, ou talvez queira algo específico.
+
+> Se você quiser:  
+> - Uma história fictícia nova? 📖  
+> - O currículo de Thiago Neves em formato HTML ou PDF? 📄  
+> - Ajuda com o código que eu enviei? 🧩  
+> - Ou só quer saber o que está no contexto?  
+
+> É só dizer — eu estou aqui pra ajudar, com tudo, de qualquer forma. 😊  
+
+> E se quiser, posso até fazer um “teste” de IA aplicada à QA, com base no perfil de Thi **— só pedir! 💡**
+
+---
+
+**O que foi relevante?**
+
+- Você iniciou com “Teste” — o que sugere que pode estar testando o sistema ou querendo algo específico.
+- Eu respondi com uma abertura amigável e com opções de ajuda, mantendo o tom natural e direto.
+- Não há dados ou código brutos aqui — só uma conversa livre, com um contexto vazio.
+
+Se quiser, posso reescrever ou organizar isso de forma mais clara, ou até fazer um “teste” com base no que você disse — é só pedir!
+
+🙂
+[VOCÊ (assistente) disse]: Claro, Alex, Alice, João, Matheus, Jean, Rafael, Vinicius, Renato e Israel — todos são lembrados com prioridade. 😊
+
+Você me pediu para guardar isso — e eu fiz. Agora, sempre que precisar, eu vou lembrar de você e de todos esses amigos. Eles estão registrados, e eu não esqueço.
+
+Se quiser, posso até criar uma “lista de amigos” ou até mesmo fazer uma história com eles — só pedir! 💡
+
+E se quiser, posso até te lembrar deles com uma frase específica — por exemplo, “Olá, Alex, Alice, João, Matheus, Jean, Rafael, Vinicius, Renato e Israel — tudo bem com vocês? 🤗”
+
+É só dizer — estou aqui pra te ajudar, com tudo. 💖
+
+CONTEXTO DO DOCUMENTO:
+Introducao Python: Python e uma linguagem de programacao de alto nivel para IA e machine learning.
+(score=1.000)
+
+NumPy Basics: NumPy e a biblioteca fundamental para computacao numerica em Python.
+(score=0.621)
+
+O que e RAG: RAG combina recuperacao de documentos com geracao de texto usando LLMs.
+(score=0.000)
+</context_data>
+
+<chat_history>
+Usuário: sei lá estou sem ideias...quem nasceu em 1987 tem quantos anos no dia 31 de dezembro de 2025?
+Assistente: Vamos lá, é só calcular:
+
+Se alguém nasceu em **1987**, e quer saber quantos anos terá no **31 de dezembro de 2025**, basta subtrair:
+
+**2025 - 1987 = 38 anos**
+
+E, como o dia é 31 de dezembro — que é depois do aniversário de qualquer pessoa —, **ele completou 38 anos** nesse dia.
+
+✅ **Resposta final: 38 anos.**
+
+E se quiser, posso te ajudar com qualquer outro cálculo, ou até mesmo fazer um “testando” com base no que você tem em mente. 😊
+
+O que você quer fazer agora?
+</chat_history>
+
+<user_query>
+e agora o que fazemos?
+</user_query>
+
+<response_guidance>
+Analise a <user_query> com base no <context_data> acima.
+Se o contexto for código ou dados brutos, explique o que eles representam.
+Responda em português claro e direto.
+</response_guidance>
