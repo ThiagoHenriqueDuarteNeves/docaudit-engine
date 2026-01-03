@@ -3,6 +3,7 @@ Document Manager - Gerenciamento inteligente de PDFs
 Indexação com detecção de duplicatas via MD5
 """
 import hashlib
+import uuid
 from pathlib import Path
 from typing import List, Dict, Callable, Optional
 import os
@@ -196,73 +197,18 @@ class DocumentManager:
                 if progress_callback:
                     progress_callback(f"Processando {file_path.name}...", idx / total_files)
                 
-                # Calcular hash
-                file_hash = self.calculate_file_hash(file_path)
+                result = self.index_single_file(file_path)
                 
-                # Verificar se já está indexado no Qdrant
-                if self.is_document_indexed(file_hash):
+                if result['status'] == 'indexed':
+                    stats['indexed'] += 1
+                    stats['total_chunks'] += result.get('chunks', 0)
+                    print(f"✅ Arquivo indexado: {file_path.name} ({result.get('chunks', 0)} chunks)")
+                elif result['status'] == 'skipped':
                     stats['skipped'] += 1
-                    continue
-                
-                # Carregar Documento
-                documents = self._load_file(file_path)
-                if not documents:
-                    # OCR fallback logic can be here or inside _load_file
-                    if file_path.suffix.lower() == '.pdf':
-                         if progress_callback: progress_callback(f"Tentando OCR em {file_path.name}...", idx / total_files)
-                         documents = self._perform_ocr(file_path)
-
-                if not documents:
-                    err_msg = f"{file_path.name} não contém texto extraível"
-                    print(f"⚠️ {err_msg}")
+                elif result['status'] == 'error':
                     stats['errors'] += 1
-                    stats['error_messages'].append(err_msg)
-                    continue
-                
-                # Adicionar metadados bases
-                for doc in documents:
-                    doc.metadata['file_hash'] = file_hash
-                    doc.metadata['filename'] = file_path.name
-                    doc.metadata['indexed_at'] = datetime.now().isoformat()
-                    # Ensure 'source' is set for compatibility
-                    if 'source' not in doc.metadata:
-                        doc.metadata['source'] = file_path.name
-                
-                # Split
-                chunks = self.text_splitter.split_documents(documents)
-                chunks = [c for c in chunks if getattr(c, "page_content", "").strip()]
-                
-                if not chunks:
-                    stats['errors'] += 1
-                    continue
-
-                # Preparar para Qdrant (Upsert)
-                q_chunks = []
-                for i, doc in enumerate(chunks):
-                    # ID Determinístico
-                    combined_id = f"{doc.metadata.get('filename')}_{i}"
-                    chunk_hash = abs(hash(combined_id)) % (10 ** 18)
+                    stats['error_messages'].append(f"Erro em {file_path.name}: {result.get('message')}")
                     
-                    q_chunks.append({
-                        "id": chunk_hash,
-                        "text": doc.page_content,
-                        "doc_id": doc.metadata.get('filename'),
-                        "source": doc.metadata.get('filename'), # Para filtros
-                        "source_id": doc.metadata.get('filename'),
-                        "chunk_id": i,
-                        "title": doc.metadata.get('filename'),
-                        "created_at": datetime.now().isoformat(),
-                        "metadata": doc.metadata # Importante salvar metadata completo
-                    })
-
-                # Enviar batch único por arquivo
-                print(f"   📥 Enviando {len(q_chunks)} chunks para Qdrant...")
-                self.vector_db.upsert_chunks(q_chunks)
-                
-                print(f"✅ Arquivo indexado: {file_path.name} ({len(chunks)} chunks)")
-                stats['indexed'] += 1
-                stats['total_chunks'] += len(chunks)
-                
             except Exception as e:
                 err_msg = f"Erro ao processar {file_path.name}: {e}"
                 print(f"❌ {err_msg}")
@@ -274,6 +220,80 @@ class DocumentManager:
         
         stats['message'] = f"Indexados: {stats['indexed']}, Ignorados: {stats['skipped']}, Erros: {stats['errors']}"
         return stats
+
+    def index_single_file(self, file_path: Path) -> Dict:
+        """
+        Indexa um único arquivo.
+        Retorna dict com status, chunks, message.
+        """
+        try:
+            file_hash = self.calculate_file_hash(file_path)
+            
+            # Verificar se já está indexado no Qdrant
+            if self.is_document_indexed(file_hash):
+                return {'status': 'skipped', 'message': 'Já indexado', 'doc_id': file_path.name}
+            
+            # Carregar Documento
+            documents = self._load_file(file_path)
+            if not documents:
+                # OCR fallback logic can be here or inside _load_file
+                if file_path.suffix.lower() == '.pdf':
+                        documents = self._perform_ocr(file_path)
+
+            if not documents:
+                return {'status': 'error', 'message': 'Não contém texto extraível'}
+            
+            # Adicionar metadados bases
+            for doc in documents:
+                doc.metadata['file_hash'] = file_hash
+                doc.metadata['filename'] = file_path.name
+                doc.metadata['indexed_at'] = datetime.now().isoformat()
+                # Ensure 'source' is set for compatibility
+                if 'source' not in doc.metadata:
+                    doc.metadata['source'] = file_path.name
+            
+            # Split
+            chunks = self.text_splitter.split_documents(documents)
+            chunks = [c for c in chunks if getattr(c, "page_content", "").strip()]
+            
+            if not chunks:
+                 return {'status': 'error', 'message': 'Chunks vazios após split'}
+
+            # Preparar para Qdrant (Upsert)
+            q_chunks = []
+            for i, doc in enumerate(chunks):
+                # ID Determinístico via UUID5 (Namespace DNS + String Única)
+                # Garante que o mesmo arquivo/chunk gere SEMPRE o mesmo ID, mesmo após restart do backend
+                combined_id = f"{doc.metadata.get('filename')}_{i}"
+                chunk_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, combined_id)
+                chunk_hash = str(chunk_uuid) # Qdrant aceita UUID strings como IDs
+                
+                q_chunks.append({
+                    "id": chunk_hash,
+                    "text": doc.page_content,
+                    "doc_id": doc.metadata.get('filename'),
+                    "source": doc.metadata.get('filename'), # Para filtros
+                    "source_id": doc.metadata.get('filename'),
+                    "chunk_id": i,
+                    "title": doc.metadata.get('filename'),
+                    "created_at": datetime.now().isoformat(),
+                    "metadata": doc.metadata # Importante salvar metadata completo
+                })
+
+            # Enviar batch único por arquivo
+            print(f"   📥 Enviando {len(q_chunks)} chunks para Qdrant...")
+            self.vector_db.upsert_chunks(q_chunks)
+            
+            return {
+                'status': 'indexed',
+                'chunks': len(chunks),
+                'doc_id': file_path.name,
+                'filename': file_path.name,
+                'message': 'Indexado com sucesso'
+            }
+            
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
 
     def _load_file(self, file_path: Path) -> List:
         """Helper para carregar arquivo com retry de encoding"""
