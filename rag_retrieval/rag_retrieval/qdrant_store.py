@@ -93,19 +93,24 @@ class QdrantStore:
             # Build points
             points = []
             for chunk, embedding in zip(batch, embeddings):
-                point_id = chunk.get("id")
-                if isinstance(point_id, str):
-                    # Convert string ID to int hash
-                    point_id = abs(hash(point_id)) % (10 ** 18)
+                # Generate composite point_id to avoid collisions between documents
+                # Format: tenant_id:doc_id:chunk_id (hashed to int for Qdrant)
+                tenant_id = chunk.get("tenant_id", "default") or "default"
+                doc_id = chunk.get("doc_id", "unknown")
+                chunk_id = chunk.get("chunk_id", 0)
+                composite_id = f"{tenant_id}:{doc_id}:{chunk_id}"
+                
+                # Convert to int hash (Qdrant requires int or UUID for point id)
+                point_id = abs(hash(composite_id)) % (10 ** 18)
                 
                 payload = {
-                    "doc_id": chunk.get("doc_id", ""),
-                    "chunk_id": chunk.get("chunk_id", 0),
+                    "doc_id": doc_id,
+                    "chunk_id": chunk_id,
                     "source_id": chunk.get("source_id", ""),
                     "title": chunk.get("title"),
                     "url": chunk.get("url"),
                     "text": chunk.get("text", ""),
-                    "tenant_id": chunk.get("tenant_id"),
+                    "tenant_id": tenant_id,
                     "tags": chunk.get("tags", []),
                     "created_at": chunk.get("created_at"),
                     "extra": chunk.get("extra", {}),

@@ -13,6 +13,12 @@ REGRAS INEGOCIÁVEIS
 - TODO item DEVE conter evidencia_literal (trecho literal do texto). Se não houver evidência, não afirme.
 - Português do Brasil.
 
+LIMITES DE TAMANHO (OBRIGATÓRIO)
+- evidencia_literal: no máximo 240 caracteres (recorte curto e suficiente).
+- texto (requirements): no máximo 180 caracteres.
+- problema / motivo / como_tornar_testavel / sugestao_reescrita: no máximo 160 caracteres.
+- Nunca repita o mesmo trecho longo. Prefira vários itens com evidências curtas.
+
 REQUISITO DE COBERTURA (NÃO PARE CEDO)
 - Extraia o MÁXIMO possível de itens presentes no texto fornecido.
 - Se houver material suficiente no texto, retorne PELO MENOS:

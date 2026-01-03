@@ -8,8 +8,8 @@ set QDRANT_URL=http://localhost:6333
 set VECTORSTORE_BACKEND=qdrant
 set OVERRIDES_DISABLE=1
 set COLLECTION_NAME=default
-set EMBED_MODEL=sentence-transformers/all-MiniLM-L6-v2
-set EMBED_DIM=384
+set EMBED_MODEL=intfloat/multilingual-e5-base
+set EMBED_DIM=768
 
 echo [2/4] Verificando Python no Venv...
 if exist ".venv\Scripts\python.exe" (

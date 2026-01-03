@@ -190,3 +190,75 @@ def normalize_adt_output(raw_resp: Union[str, Dict, List], analysis_type: str, s
     normalized_data = normalizer.normalize(data)
     
     return normalized_data
+
+def sanitize_llm_json_output(raw_text: str) -> str:
+    """
+    Sanitiza a saída do LLM para garantir que apenas o JSON seja parseado.
+    1. Remove markdown fences.
+    2. Encontra o primeiro '{' e extrai até o '}' balanceado correspondente.
+    """
+    if not raw_text:
+        return ""
+        
+    text = raw_text.strip()
+    
+    # 1. Remover Markdown fences
+    import re
+    fence_pattern = r"```(?:json)?\s*(.*?)\s*```"
+    match = re.search(fence_pattern, text, re.DOTALL | re.IGNORECASE)
+    if match:
+        text = match.group(1).strip()
+    
+    # 2. Extração por Brace Matching
+    start_idx = text.find("{")
+    if start_idx == -1:
+        # Se não achar '{', checa se é array '['
+        start_idx_list = text.find("[")
+        if start_idx_list != -1:
+             start_idx = start_idx_list
+             open_char = "["
+             close_char = "]"
+        else:
+             return text 
+    else:
+        # Se achou '{' checa prioridade com '['
+        start_idx_list = text.find("[")
+        if start_idx_list != -1 and start_idx_list < start_idx:
+             start_idx = start_idx_list
+             open_char = "["
+             close_char = "]"
+        else:
+             open_char = "{"
+             close_char = "}"
+
+    # Brace Matching Loop
+    balance = 0
+    end_idx = -1
+    in_string = False
+    escape = False
+    
+    for i in range(start_idx, len(text)):
+        char = text[i]
+        
+        if in_string:
+            if escape:
+                escape = False
+            elif char == "\\":
+                escape = True
+            elif char == '"':
+                in_string = False
+        else:
+            if char == '"':
+                in_string = True
+            elif char == open_char:
+                balance += 1
+            elif char == close_char:
+                balance -= 1
+                if balance == 0:
+                    end_idx = i + 1
+                    break
+    
+    if end_idx != -1:
+        return text[start_idx:end_idx]
+    
+    return text[start_idx:]

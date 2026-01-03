@@ -61,6 +61,8 @@ origins = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
     "http://127.0.0.1:5500",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
     "http://localhost:3002",
     "http://127.0.0.1:3002",
     "https://aurora.share.zrok.io",          # Produção Zrok
@@ -158,6 +160,78 @@ class AnalyzeRequest(BaseModel):
     scan_batch_size: int = 12
     scan_passes: int = 1
     debug_llm: bool = False
+
+@app.post("/api/index")
+async def index_document(
+    file: UploadFile = File(...),
+    doc_id: Optional[str] = Form(None)
+):
+    """
+    Upload e indexação imediata de documento.
+    Aceita PDF, TXT, MD.
+    """
+    try:
+        # 1. Validar e Salvar
+        # Use the same directory as the DocumentManager to ensure visibility
+        UPLOAD_DIR = doc_manager.docs_dir
+        UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+        
+        # Sanitize filename
+        safe_name = Path(file.filename).name
+        # Use doc_id as filename if provided, else original name
+        # But we must preserve extension
+        ext = Path(safe_name).suffix
+        
+        target_name = safe_name
+        if doc_id: 
+            # If doc_id provided, ensure it ends with correct extension or append it
+            if not doc_id.lower().endswith(ext.lower()):
+                target_name = f"{doc_id}{ext}"
+            else:
+                target_name = doc_id
+        
+        # Prevent collisions or overwrites? 
+        # For this demo, overwrite is fine as we want to update content.
+        
+        file_path = UPLOAD_DIR / target_name
+        
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        # 2. Indexar
+        # doc_manager is global in api.py
+        result = doc_manager.index_single_file(file_path)
+        
+        if result['status'] == 'error':
+            raise HTTPException(status_code=500, detail=result['message'])
+            
+        return {
+            "doc_id": result.get('doc_id', target_name),
+            "status": result['status'],
+            "chunks": result.get('chunks', 0),
+            "filename": target_name,
+            "message": result['message']
+        }
+        
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        import traceback
+        print(f"Index error: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/documents")
+async def list_documents():
+    """
+    Lista todos os documentos disponíveis (indexados) para análise.
+    """
+    try:
+        # doc_manager is global
+        docs = doc_manager.list_documents()
+        return {"documents": docs}
+    except Exception as e:
+        print(f"Error listing documents: {e}")
+        return {"documents": [], "error": str(e)}
 
 # ============================================================================
 # ENDPOINTS - CHAT

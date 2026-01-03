@@ -242,10 +242,8 @@ def analyze_documents(
             }
             debug_capture["llm_response_raw"] = _trunc(content)
 
-        if content.startswith("```json"): content = content[7:]
-        if content.startswith("```"): content = content[3:]
-        if content.endswith("```"): content = content[:-3]
-        return content.strip()
+        from core.normalizer import sanitize_llm_json_output
+        return sanitize_llm_json_output(content)
 
     # =========================================================================
     # EXECUTION FLOW
@@ -470,13 +468,12 @@ Se nada for encontrado, retorne {{ "items": {{}} }}
                     }
                     debug_capture["llm_response_raw"] = _trunc(content)
                 
-                # Clean markdown
-                if content.startswith("```json"): content = content[7:]
-                if content.startswith("```"): content = content[3:]
-                if content.endswith("```"): content = content[:-3]
+                # Robust sanitization for Scan All
+                from core.normalizer import sanitize_llm_json_output
+                content = sanitize_llm_json_output(content)
                 
                 # Parse
-                batch_json = json.loads(content.strip())
+                batch_json = json.loads(content)
                 
                 # Armazenar resultado bruto para agregação inteligente
                 if batch_json:
@@ -771,103 +768,32 @@ def analyze_documents(
     debug_llm: bool = False
 ) -> dict:
     """
-    Realiza análise técnica com Quality Gate e Retry automático para Auditoria de Requisitos.
-    Wraps _internal_analyze_pipeline.
+    Realiza análise técnica.
+    Para qa_requirements_audit, usa pipeline V3 (Full-Scan + Map-Reduce + Fallback).
     """
-    print(f"DEBUG: Calling analyze_documents wrapper for {analysis_type}")
+    print(f"DEBUG: Calling analyze_documents for {analysis_type}")
     
-    # 1. Primeira Execução (Prompt V1 - Standard)
-    result_v1 = _internal_analyze_pipeline(
+    # QA Requirements Audit: Use V3 Pipeline
+    if analysis_type == "qa_requirements_audit":
+        from core.qa_audit_v3 import run_qa_requirements_audit_v3
+        
+        # Load prompt v2 (coverage-focused)
+        current_prompt, current_schema = load_resources(analysis_type, variant="v2")
+        
+        logger.info(f"🚀 [ADT] Using QA Audit V3 Pipeline for {document_ids}")
+        
+        return run_qa_requirements_audit_v3(
+            document_ids=document_ids,
+            system_prompt=current_prompt,
+            schema=current_schema,
+            debug_llm=debug_llm,
+            batch_size=4,
+            max_chunks=200
+        )
+    
+    # Other analysis types: Use internal pipeline
+    return _internal_analyze_pipeline(
         document_ids, analysis_type, question, max_items_per_category,
         scan_all, scan_batch_size, scan_passes, debug_llm, 
         prompt_variant="v1"
     )
-    
-    # Se não for QA Audit, retorna direto
-    if analysis_type != "qa_requirements_audit":
-        return result_v1
-        
-    # 2. Quality Gate Check
-    items = result_v1.get("items", {})
-    requirements = items.get("requirements", [])
-    ambiguities = items.get("ambiguities", [])
-    unverifiable = items.get("unverifiable_criteria", [])
-    contradictions = items.get("contradictions", [])
-    
-    count_req = len(requirements)
-    count_amb = len(ambiguities)
-    count_unv = len(unverifiable)
-    count_con = len(contradictions)
-    
-    # Limites (Hardcoded conforme solicitação)
-    underproduction = False
-    if count_req < 10 or count_amb < 8 or count_unv < 3 or count_con < 1:
-        underproduction = True
-        
-    if not underproduction:
-        # Passou no gate, retorna v1
-        if "meta" not in result_v1: result_v1["meta"] = {}
-        result_v1["meta"]["debug"] = {
-            "underproduction_detected": False,
-            "retry_used": False,
-            "selected": "initial"
-        }
-        return result_v1
-        
-    # 3. Retry (Prompt V2 - Coverage Forced)
-    logger.info("⚡ [ADT QUALITY GATE] Underproduction detected. Triggering Retry with Prompt V2...")
-    
-    result_v2 = _internal_analyze_pipeline(
-        document_ids, analysis_type, question, max_items_per_category,
-        scan_all, scan_batch_size, scan_passes, debug_llm, 
-        prompt_variant="v2"
-    )
-    
-    # 4. Avaliação e Seleção
-    items_v2 = result_v2.get("items", {})
-    req_v2 = len(items_v2.get("requirements", []))
-    amb_v2 = len(items_v2.get("ambiguities", []))
-    unv_v2 = len(items_v2.get("unverifiable_criteria", []))
-    con_v2 = len(items_v2.get("contradictions", []))
-    
-    score_v1 = count_req + count_amb + count_unv + (2 * count_con)
-    score_v2 = req_v2 + amb_v2 + unv_v2 + (2 * con_v2)
-    
-    # Lógica de escolha: Retornar Retry se score maior
-    selected_result = result_v1
-    selection_reason = "initial_better_or_equal"
-    
-    if score_v2 > score_v1:
-        selected_result = result_v2
-        selection_reason = "retry_better_score"
-    elif score_v2 == score_v1:
-        # Se empate no score, preferir retry se (e somente se) retry for schema-valid
-        # Mas aqui assumimos valid schema pelo pipeline.
-        # Vamos manter v1 no empate para economizar mudança.
-        pass
-
-    # Injetar Debug Info
-    if "meta" not in selected_result: selected_result["meta"] = {}
-    selected_result["meta"]["debug"] = {
-        "underproduction_detected": True,
-        "retry_used": True,
-        "selected": "retry" if selected_result is result_v2 else "initial",
-        "selection_reason": selection_reason,
-        "scores": {"initial": score_v1, "retry": score_v2},
-        "counts_initial": {
-            "requirements": count_req,
-            "ambiguities": count_amb,
-            "unverifiable": count_unv,
-            "contradictions": count_con
-        },
-        "counts_retry": {
-            "requirements": req_v2,
-            "ambiguities": amb_v2,
-            "unverifiable": unv_v2,
-            "contradictions": con_v2
-        }
-    }
-    
-    logger.info(f"🏆 [ADT QUALITY GATE] Selected: {selected_result['meta']['debug']['selected']} (Score: {max(score_v1, score_v2)})")
-    
-    return selected_result
