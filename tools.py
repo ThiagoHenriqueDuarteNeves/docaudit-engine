@@ -4,8 +4,8 @@ DocumentSearchTool e MemorySearchTool retornam trechos relevantes.
 """
 from typing import List, Dict
 
-from document_manager import DocumentManager
-from memory_manager import ConversationMemory
+from core.document_manager import DocumentManager
+from core.memory_manager import ConversationMemory
 
 
 class DocumentSearchTool:
