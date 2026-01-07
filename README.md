@@ -1,92 +1,75 @@
-# 🤖 RAG Chatbot - React + FastAPI + Qdrant
+# 🕵️‍♂️ DocAudit Engine
 
-Um chatbot **RAG (Retrieval-Augmented Generation)** profissional de última geração, construído com uma arquitetura moderna separando Frontend e Backend. Possui memória híbrida (Qdrant + BM25), suporte multimodal (envio de imagens) e integração completa com modelos locais via **LM Studio** ou APIs compatíveis com OpenAI.
+**DocAudit Engine** é uma plataforma avançada de **Auditoria de Qualidade e Análise de Riscos** impulsionada por IA. Utilizando uma arquitetura RAG (Retrieval-Augmented Generation) híbrida, o sistema analisa contratos e documentos técnicos para detectar riscos, ambiguidades e conformidade com requisitos.
 
-## ✨ Características Principais
+Diferente de chatbots genéricos, o DocAudit é focado em processamento estruturado (Aurora ADT Pipeline), permitindo varredura completa de documentos ("Scan All") para relatórios detalhados.
 
-- 🌐 **Frontend Moderno (React)**: Interface responsiva e rápida construída com Vite, TailwindCSS e React.
-- 🚀 **Backend Robusto (FastAPI)**: API RESTful assíncrona para alta performance.
-- 🧠 **Memória Híbrida Inteligente**: Combina busca vetorial (Dense) via **Qdrant** com busca lexical (BM25) para recuperação precisa de contexto.
-- 📸 **Suporte Multimodal**: Envie imagens junto com texto para análise (requer modelos compatíveis com vision, ex: Llama-3.2-Vision).
-- 💾 **Histórico & Persistência**: Gerenciamento completo de histórico de conversas e arquivamento.
-- 🔌 **LM Studio / OpenAI**: Compatibilidade nativa com servidores locais (GGUF) ou APIs OpenAI padrão.
-- 🐳 **Dockerized**: Suporte a containerização para produção.
+## ✨ Funcionalidades Principais
+
+- 🔍 **Auditoria Automatizada**: Pipelines dedicados para:
+  - **QA Requirements Audit**: Validação de requisitos técnicos.
+  - **Risk Detection**: Identificação de riscos jurídicos, administrativos e operacionais.
+  - **Ambiguity Detection**: Detecção de termos vagos ou mal definidos.
+- 🚀 **Full Retrieval Scan**: Capacidade de processar o documento inteiro (chunk por chunk) garantindo 100% de cobertura na análise, sem depender apenas de busca por similaridade.
+- 📊 **Relatórios Estruturados**: Geração de saídas em JSON estrito e visualização rica em dashboard interativo.
+- 🧠 **Memória Híbrida**: Combinação de busca vetorial (**Qdrant**) e lexical (**BM25**) para precisão máxima.
+- ⚡ **Frontend Moderno (Next.js)**: Interface reativa construída com React 19 e TailwindCSS.
 
 ## 🏗️ Arquitetura
 
-O projeto evoluiu de uma aplicação monolítica Gradio para uma arquitetura micro-serviços/cliente-servidor:
-
 ```mermaid
 graph TD
-    User[👤 Usuário] -->|Browser| UI[💻 Frontend React (Vite)]
-    UI -->|HTTP/JSON| API[⚡ Backend FastAPI]
+    User[👤 Auditor] -->|Upload/Config| UI[💻 Frontend (Next.js)]
+    UI -->|JSON Request| API[⚡ Backend FastAPI]
     
-    subgraph "Backend Core"
-        API --> Manager[Document & Memory Manager]
-        Manager -->|Busca Híbrida| Qdrant[💾 Qdrant (Vector DB)]
-        Manager -->|Lexical| BM25[📝 BM25 Index]
-        API -->|LLM Request| LMStudio[🤖 LM Studio / OpenAI API]
+    subgraph "DocAudit Core"
+        API --> Manager[Document Manager]
+        API --> ADT[⚙️ Aurora ADT Engine]
+        ADT -->|Scan All| Qdrant[💾 Qdrant (Vector Store)]
+        ADT -->|Analyze| LLM[🤖 Local LLM (LM Studio)]
     end
     
-    subgraph "Storage"
-        Qdrant --> Embeddings[🔢 Embeddings]
-        BM25 --> Cache[📂 File Cache]
+    subgraph "Validation"
+        LLM -->|Extract| Schema[📝 JSON Schema Validation]
+        Schema -->|Report| UI
     end
 ```
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **React 18** + **Vite**
-- **TailwindCSS 4** (Estilização)
-- **Lucide React** (Ícones)
-- **React Markdown** (Renderização de respostas)
+- **Framework:** Next.js 16 (React 19)
+- **Estilização:** TailwindCSS & Lucide React
+- **UI Components:** Shadcn/ui (Radix UI)
 
 ### Backend
-- **FastAPI** (Python 3.11+)
-- **Qdrant** (Vector Store)
-- **LangChain** (Orquestração RAG)
-- **Sentence Transformers** (Embeddings Locais)
-- **RankBM25** (Busca Lexical)
+- **API:** FastAPI (Python 3.11+)
+- **Vector DB:** Qdrant (Docker)
+- **Core Logic:** LangChain + Aurora ADT (Custom Pipeline)
+- **Busca:** Hybrid (Dense + BM25)
 
 ## 📋 Pré-requisitos
 
 - **Python 3.11+**
-- **Node.js 18+** & **npm**
-- **Docker** (para rodar o banco Qdrant)
-- **LM Studio** (rodando localmente) ou Chave de API OpenAI
+- **Node.js 18+**
+- **Docker** (para Qdrant)
+- **LM Studio** (recomendado para LLM local)
 
-## 🚀 Quick Start (Automático)
+## 🚀 Como Rodar
 
-Para ambiente Windows, fornecemos um script que sobe toda a infraestrutura:
-
-```powershell
-start_all_environments.bat
-```
-*Este script irá:*
-1. Iniciar o container do **Qdrant**.
-2. Subir a **API Backend** (Porta 8000).
-3. Iniciar o servidor de desenvolvimento **Frontend** (Porta 5173).
-4. Configurar túneis **Zrok** (se configurado).
-
----
-
-## 💻 Instalação & Execução Manual
-
-Se preferir rodar manualmente ou estiver no Linux/Mac:
-
-### 1. Banco de Dados (Qdrant)
+### 1. Preparar Banco de Dados
+Certifique-se que o Docker está rodando e inicie o Qdrant:
 ```bash
-# Na raiz do projeto
-docker-compose -f rag_retrieval/docker-compose.yml up -d qdrant
+docker start qdrant-rag
+# OU se for a primeira vez:
+# docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant
 ```
 
-### 2. Backend (FastAPI)
+### 2. Iniciar Backend
 ```bash
-# Criar e ativar ambiente virtual
+# Navegue até a raiz
 python -m venv .venv
-.\.venv\Scripts\Activate  # Windows
-source .venv/bin/activate # Linux/Mac
+.\.venv\Scripts\Activate
 
 # Instalar dependências
 pip install -r requirements.txt
@@ -94,49 +77,41 @@ pip install -r requirements.txt
 # Iniciar API
 python -m uvicorn api:app --reload --host 0.0.0.0 --port 8000
 ```
-*Acesse a documentação da API em: http://localhost:8000/docs*
 
-### 3. Frontend (React)
+### 3. Iniciar Frontend
+⚠️ **Importante:** O frontend atual está na pasta `frontend` (Next.js), não use `frontend-new`.
+
 ```bash
-cd frontend-new
+cd frontend
 
-# Instalar pacotes (primeira vez)
+# Instalar dependências
 npm install
 
-# Rodar servidor dev
+# Rodar servidor de desenvolvimento
 npm run dev
 ```
-*Acesse a interface em: http://localhost:5173*
+O frontend estará acessível em: `http://localhost:3000`
 
 ## ⚙️ Configuração (.env)
 
-O backend utiliza um arquivo `.env` na raiz. Principais variáveis:
+Crie/edite o arquivo `.env` na raiz:
 
 ```env
-# LM Studio / LLM
+# URL do modelo LLM (LM Studio ou OpenAI)
 LM_STUDIO_URL=http://localhost:1234/v1
-# Se usar OpenAI real, adicione OPENAI_API_KEY=...
 
-# Qdrant
+# Configuração Qdrant
 QDRANT_URL=http://localhost:6333
 QDRANT_COLLECTION=rag_collection
 
-# RAG Settings
+# Parâmetros de Análise
 EMBEDDING_MODEL=all-MiniLM-L6-v2
-USE_HYBRID_RETRIEVAL=true
 ```
 
 ## 📝 Primeiros Passos
 
-1. **Abra o Frontend** (`http://localhost:5173`).
-2. **Conecte o LM Studio**: Certifique-se que o servidor local do LM Studio está rodando na porta 1234.
-3. **Upload de Documentos**: Vá na aba de configurações/documentos e faça upload de seus PDFs.
-4. **Chat**: Inicie uma conversa. O sistema usará o RAG para buscar contexto nos seus documentos.
-
-## 🤝 Contribuindo
-
-1. Faça um Fork.
-2. Crie uma branch (`git checkout -b feature/NovaFeature`).
-3. Commit suas mudanças (`git commit -m 'Adiciona NovaFeature'`).
-4. Push para a branch (`git push origin feature/NovaFeature`).
-5. Abra um Pull Request.
+1. Acesse `http://localhost:3000`.
+2. Faça **Upload** de um contrato ou documento de requisitos (PDF).
+3. Selecione o tipo de análise (ex: *Risk Detection*).
+4. Marque **"Scan All Chunks"** para uma varredura completa.
+5. Clique em **Executar Análise** e aguarde o relatório.
