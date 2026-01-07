@@ -297,8 +297,22 @@ async def analyze_endpoint(request: AnalyzeRequest):
     """
     Endpoint para análise técnica de documentos (Aurora ADT).
     """
+    import time
+    from datetime import datetime
+    
+    start_time = time.time()
+    request_id = datetime.now().strftime("%H%M%S%f")[:10]
+    
+    print(f"\n{'='*60}")
+    print(f"📊 [API/analyze #{request_id}] START")
+    print(f"   Type: {request.analysis_type}")
+    print(f"   Docs: {request.document_ids}")
+    print(f"   ScanAll: {request.scan_all}, BatchSize: {request.scan_batch_size}")
+    print(f"   Question: {request.question or 'N/A'}")
+    print(f"{'='*60}")
+    
     try:
-        print(f"📊 [API/analyze] Request: {request.analysis_type} on {request.document_ids}")
+        print(f"🔄 [#{request_id}] Calling analyze_documents...")
         
         result = analyze_documents(
             document_ids=request.document_ids,
@@ -311,24 +325,44 @@ async def analyze_endpoint(request: AnalyzeRequest):
             debug_llm=request.debug_llm
         )
         
+        elapsed = time.time() - start_time
+        print(f"✅ [#{request_id}] analyze_documents returned in {elapsed:.2f}s")
+        
         if "error" in result:
-             if result.get("error") == "INVALID_ADT_JSON":
-                 # Retornar 422 com os detalhes de validação
-                 return JSONResponse(
-                     status_code=422,
-                     content=result
-                 )
-             elif "meta" not in result:
-                 # Outros erros genéricos
-                 raise HTTPException(status_code=500, detail=result["error"])
+            print(f"⚠️ [#{request_id}] Result contains 'error': {result.get('error')}")
+            if result.get("error") == "INVALID_ADT_JSON":
+                print(f"   Returning 422 (INVALID_ADT_JSON)")
+                return JSONResponse(
+                    status_code=422,
+                    content=result
+                )
+            elif "meta" not in result:
+                print(f"   Raising 500 (no meta in error result)")
+                raise HTTPException(status_code=500, detail=result["error"])
+        
+        # Log success summary
+        items = result.get("items", {})
+        item_counts = {k: len(v) if isinstance(v, list) else 0 for k, v in items.items()}
+        print(f"📈 [#{request_id}] SUCCESS - Items: {item_counts}")
+        print(f"{'='*60}\n")
              
         return result
         
     except HTTPException:
+        elapsed = time.time() - start_time
+        print(f"❌ [#{request_id}] HTTPException after {elapsed:.2f}s")
         raise
     except Exception as e:
         import traceback
+        elapsed = time.time() - start_time
+        print(f"\n{'!'*60}")
+        print(f"❌ [#{request_id}] EXCEPTION after {elapsed:.2f}s")
+        print(f"   Type: {type(e).__name__}")
+        print(f"   Message: {str(e)}")
+        print(f"{'!'*60}")
+        print("FULL TRACEBACK:")
         traceback.print_exc()
+        print(f"{'!'*60}\n")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/chat")
