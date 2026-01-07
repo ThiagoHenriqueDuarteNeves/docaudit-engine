@@ -1,4 +1,4 @@
-from memory_manager import ConversationMemory
+from core.memory_manager import ConversationMemory
 
 # Instância global de memória (wrapper para manter compatibilidade)
 memory = ConversationMemory()

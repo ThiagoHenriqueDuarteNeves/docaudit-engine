@@ -27,7 +27,7 @@ from core.llm import (
 from core.documents import get_doc_manager
 from core.memory import get_memory_instance
 from core.adt import analyze_documents # Aurora ADT
-from memory_manager import ConversationMemory
+from core.memory_manager import ConversationMemory
 
 # Instâncias Globais
 doc_manager = get_doc_manager()

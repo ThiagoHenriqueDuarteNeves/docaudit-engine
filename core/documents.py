@@ -1,4 +1,4 @@
-from document_manager import DocumentManager
+from core.document_manager import DocumentManager
 from core import config
 
 # Singleton DocumentManager

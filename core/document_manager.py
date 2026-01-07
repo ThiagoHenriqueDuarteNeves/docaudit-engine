@@ -11,7 +11,7 @@ from datetime import datetime
 import sys
 
 # Fix for rag_retrieval import (module not installed as package)
-sys.path.append(str(Path(__file__).parent / "rag_retrieval"))
+sys.path.append(str(Path(__file__).parent.parent / "rag_retrieval"))
 
 
 from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader, TextLoader
