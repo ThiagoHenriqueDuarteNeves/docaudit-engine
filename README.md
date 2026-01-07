@@ -108,7 +108,7 @@ QDRANT_URL=http://localhost:6333
 QDRANT_COLLECTION=rag_collection
 
 # Parâmetros de Análise
-EMBEDDING_MODEL=all-MiniLM-L6-v2
+EMBED_MODEL=intfloat/multilingual-e5-base
 ```
 
 ## 📝 Primeiros Passos

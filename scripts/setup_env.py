@@ -79,7 +79,7 @@ LM_STUDIO_API_KEY=lm-studio
 
 # Embeddings
 EMBEDDING_DEVICE={device}
-EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+EMBED_MODEL=intfloat/multilingual-e5-base
 
 # Vector Database
 CHROMA_PERSIST_DIR=./db
