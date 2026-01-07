@@ -90,3 +90,23 @@ test_result.log
 .coverage
 pdf_content.txt
 retry_log.txt
+
+# User uploads (keep local only)
+data/uploads/
+
+# Junk files (command errors)
+8000)
+8081)
+
+# Generated HTML reports
+analyze_viewer.html
+
+# Migration/utility scripts (keep local)
+sync_*.py
+recreate_*.py
+read_log.py
+
+# Internal scripts (keep local)
+scripts/debug_*.py
+scripts/test_*.py
+scripts/diagnose_*.py
