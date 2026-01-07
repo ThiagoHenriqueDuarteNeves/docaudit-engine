@@ -20,7 +20,7 @@ Diferente de chatbots genéricos, o DocAudit é focado em processamento estrutur
 ```mermaid
 graph TD
     User["👤 Auditor"] -->|Upload/Config| UI["💻 Frontend - Next.js"]
-    UI -->|JSON Request| API["⚡ Backend FastAPI"]
+    UI <-->|Polling/JSON| API["⚡ Backend FastAPI"]
     
     subgraph DocAudit_Core["DocAudit Core"]
         API --> Manager["Document Manager"]
@@ -29,6 +29,7 @@ graph TD
         Retrieval --> Qdrant["💾 Qdrant - Dense Vectors"]
         Retrieval --> BM25["📑 BM25 - Lexical Search"]
         ADT -->|Analyze| LLM["🤖 Local LLM - LM Studio"]
+        ADT -.->|Trace| LangSmith["🛠️ LangSmith - Observability"]
     end
     
     subgraph Validation
