@@ -8,6 +8,7 @@ from typing import List, Optional
 from datetime import datetime
 
 from core.llm import llm
+from langsmith import traceable
 from core.hybrid_adapter import hybrid_search, format_hybrid_snips_for_context
 from core.normalizer import normalize_adt_output
 from core.consolidation import consolidate_risks
@@ -318,6 +319,7 @@ Não inclua markdown ```json no início ou fim. Apenas o raw JSON.
 
 
 
+@traceable(name="Analyze Internal Pipeline")
 def _internal_analyze_pipeline(
     document_ids: List[str],
     analysis_type: str,
@@ -333,6 +335,21 @@ def _internal_analyze_pipeline(
     """
     Realiza análise técnica em documentos específicos com validação e repair.
     """
+    return _internal_analyze_pipeline_traced(document_ids, analysis_type, question, max_items_per_category, scan_all, scan_batch_size, scan_passes, debug_llm, prompt_variant, on_progress)
+
+@traceable(name="Analyze Pipeline (Core)")
+def _internal_analyze_pipeline_traced(
+    document_ids: List[str],
+    analysis_type: str,
+    question: Optional[str] = None,
+    max_items_per_category: int = 5,
+    scan_all: bool = False,
+    scan_batch_size: int = 12,
+    scan_passes: int = 1,
+    debug_llm: bool = False,
+    prompt_variant: str = "v1",
+    on_progress: Optional[callable] = None
+) -> dict:
     
     # 1. Preparação (Comum)
     search_query = question if question else f"Realizar análise de {analysis_type} nestes documentos."
@@ -582,13 +599,24 @@ Se nada for encontrado, retorne {{ "items": {{}} }}
             doc_text = "(Nenhum trecho relevante encontrado nos documentos especificados)"
             logger.warning(f"⚠️ [ADT] Nenhum documento encontrado para IDs: {document_ids}")
         
+        if on_progress: on_progress(20, 100) # Simula 20% após busca
+        
         # Placeholder vazio para fluxo normal
         data = None 
+        
+        coverage_meta = {
+            "analysis_mode": "hybrid_rag",
+            "total_chunks_retrieved": len(doc_snips),
+            "processed_chunks": len(doc_snips), # No RAG processamos apenas o que recuperamos
+            "batches": 1,
+            "batch_size": len(doc_snips)
+        }
         
         if debug_llm:
             debug_capture["context_stats"] = {
                 "chars": len(doc_text),
-                "doc_snips": len(doc_snips)
+                "doc_snips": len(doc_snips),
+                "coverage_meta": coverage_meta
             }
 
     # 3. Montar Prompt Base (Usado apenas se data ainda for None, ou seja, Hybrid Mode)
@@ -651,8 +679,10 @@ Não inclua markdown ```json no início ou fim. Apenas o raw JSON.
         # ----- EXECUÇÃO INICIAL -----
         if data is None: # Hybrid Mode
             logger.info("🤖 [ADT] Tentativa 1: Gerando análise (Hybrid)...")
+            if on_progress: on_progress(50, 100) # Simula 50% antes do LLM
             raw_json = call_llm_with_prompt(base_prompt, current_prompt)
             data = json.loads(raw_json)
+            if on_progress: on_progress(80, 100) # Simula 80% após LLM
         else:
             logger.info("🤖 [ADT] Usando resultados agregados do Scan All.")
         
@@ -808,6 +838,7 @@ def analyze_documents(
     )
 
 
+@traceable(name="Analyze With Progress")
 def analyze_documents_with_progress(
     document_ids: List[str],
     analysis_type: str,

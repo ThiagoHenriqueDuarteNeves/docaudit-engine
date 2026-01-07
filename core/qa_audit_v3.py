@@ -9,6 +9,7 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime
 
 from core.llm import llm
+from langsmith import traceable
 from core.normalizer import normalize_adt_output
 
 logger = logging.getLogger("aurora.adt.qa_v3")
@@ -233,6 +234,7 @@ Retorne APENAS o JSON corrigido, sem markdown.
     return None
 
 
+@traceable(name="QA V3 Batch Extraction")
 def call_llm_for_extraction(batch_text: str, system_prompt: str, batch_num: int, total_batches: int, max_tokens: int = 2500) -> Dict:
     """Call LLM to extract items from a batch with structured output and repair."""
     import requests
@@ -360,6 +362,7 @@ def normalize_text(text: str) -> str:
     return sanitize_text(text).lower()
 
 
+@traceable(name="QA V3 Merge & Dedup")
 def merge_and_dedup_results(batch_results: List[Dict]) -> Dict:
     """
     Merge results from all batches and deduplicate.
@@ -701,6 +704,7 @@ def fallback_extract_contradiction(full_text: str, existing_count: int) -> List[
 # MAIN V3 PIPELINE
 # =============================================================================
 
+@traceable(name="QA Audit V3 Pipeline")
 def run_qa_requirements_audit_v3(
     document_ids: List[str],
     system_prompt: str,
