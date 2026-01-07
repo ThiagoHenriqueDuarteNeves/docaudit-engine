@@ -71,3 +71,22 @@ db_prod_old_v1/
 
 # Qdrant & RAG Data
 bm25_index/
+
+# Prompts (internal)
+prompts/
+
+# Test folders
+tests/
+test_qdrant/
+test_qdrant_native/
+
+# Debug files
+debug_*.py
+debug_*.txt
+check_*.py
+*_log.txt
+test_output.txt
+test_result.log
+.coverage
+pdf_content.txt
+retry_log.txt
