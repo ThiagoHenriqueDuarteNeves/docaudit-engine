@@ -21,7 +21,7 @@ except ImportError:
 
 # Imports Legados (por enquanto)
 # from document_manager import DocumentManager # Removido
-from tools import DocumentSearchTool, MemorySearchTool
+from core.tools import DocumentSearchTool, MemorySearchTool
 from core.router import classify_query_simple
 
 # Inicializar Gerenciadores

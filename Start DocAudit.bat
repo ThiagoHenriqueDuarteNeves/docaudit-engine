@@ -10,7 +10,7 @@ cd /d "c:\Users\Thiago\Documents\005 - DocAudit Engine"
 
 :: 2. Start Backend (New Window)
 echo [1/2] Launching Backend...
-start "DocAudit Backend" cmd /k "run_backend_debug.bat"
+start "DocAudit Backend" cmd /k "scripts\run_backend_debug.bat"
 
 :: 3. Start Frontend (New Window)
 echo [2/2] Launching Frontend...
