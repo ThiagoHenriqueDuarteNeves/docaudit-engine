@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { runAnalyze, uploadDocument, fetchDocuments, DocumentInfo } from "@/lib/api";
+import { runAnalyzeWithProgress, uploadDocument, fetchDocuments, DocumentInfo, ProgressInfo } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +18,7 @@ export default function Home() {
   const [debugLlm, setDebugLlm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<ProgressInfo | null>(null);
 
   // Upload State
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -63,18 +64,23 @@ export default function Home() {
   const handleRun = async () => {
     setLoading(true);
     setError(null);
+    setProgress(null);
     try {
       const ids = docIds.split("\n").map(s => s.trim()).filter(Boolean);
       if (ids.length === 0) {
         throw new Error("Informe pelo menos um ID de documento.");
       }
 
-      const result = await runAnalyze({
-        document_ids: ids,
-        analysis_type: analysisType,
-        scan_all: scanAll,
-        debug_llm: debugLlm,
-      });
+      const result = await runAnalyzeWithProgress(
+        {
+          document_ids: ids,
+          analysis_type: analysisType,
+          scan_all: scanAll,
+          debug_llm: debugLlm,
+        },
+        (info) => setProgress(info),  // Progress callback
+        2000  // Poll every 2 seconds
+      );
 
       // Save to localStorage for the report page
       localStorage.setItem("lastAnalysisResult", JSON.stringify(result));
@@ -89,6 +95,7 @@ export default function Home() {
       setError(err.message);
     } finally {
       setLoading(false);
+      setProgress(null);
     }
   };
 
@@ -230,13 +237,34 @@ export default function Home() {
           </div>
         )}
 
+        {/* Progress Bar */}
+        {loading && progress && (
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm text-slate-600">
+              <span>{progress.message || "Processando..."}</span>
+              <span>{progress.percent}%</span>
+            </div>
+            <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+              <div
+                className="bg-blue-600 h-3 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${progress.percent}%` }}
+              />
+            </div>
+            <p className="text-xs text-slate-500 text-center">
+              Lote {progress.batch} de {progress.total}
+            </p>
+          </div>
+        )}
+
         <Button
           className="w-full h-12 text-lg"
           onClick={handleRun}
           disabled={loading || uploading}
         >
           {loading ? (
-            <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Processando Análise...</>
+            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              {progress ? `${progress.percent}% concluído` : "Iniciando..."}
+            </>
           ) : "Executar Análise"}
         </Button>
       </div>

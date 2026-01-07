@@ -1,0 +1,50 @@
+{
+    "_comment": "Ground Truth para avaliação do DocAudit Engine - Ambiguity Detection",
+    "_instructions": "Preencha expected_items com as ambiguidades REAIS que existem no documento",
+    "document_id": "AuditDocEngine_Demo_SRS_QA_Requisitos.pdf",
+    "analysis_type": "ambiguity_detection",
+    "annotated_by": "human",
+    "annotated_at": "2026-01-07",
+    "expected_items": {
+        "ambiguities": [
+            {
+                "problema": "Termo 'adequado' é subjetivo e não mensurável",
+                "trecho_problematico": "O sistema deve ter desempenho adequado",
+                "sugestao_reescrita": "O sistema deve processar 1000 requisições por segundo com latência < 100ms",
+                "tipo_ambiguidade": "vagueza",
+                "severidade": "alta"
+            },
+            {
+                "problema": "Uso de 'etc' deixa requisito incompleto",
+                "trecho_problematico": "O sistema deve suportar navegadores Chrome, Firefox, etc",
+                "sugestao_reescrita": "O sistema deve suportar Chrome 90+, Firefox 88+, Safari 14+ e Edge 90+",
+                "tipo_ambiguidade": "incompletude",
+                "severidade": "media"
+            },
+            {
+                "problema": "Termo 'alguns' não define quantidade",
+                "trecho_problematico": "O sistema deve permitir alguns usuários simultâneos",
+                "sugestao_reescrita": "O sistema deve suportar até 500 usuários simultâneos",
+                "tipo_ambiguidade": "vagueza",
+                "severidade": "alta"
+            },
+            {
+                "problema": "Referência circular sem definição clara",
+                "trecho_problematico": "Conforme especificado anteriormente",
+                "sugestao_reescrita": "Conforme especificado na seção 3.2, item REQ-005",
+                "tipo_ambiguidade": "referencia_ambigua",
+                "severidade": "baixa"
+            }
+        ]
+    },
+    "expected_counts": {
+        "ambiguities": 4
+    },
+    "ambiguity_types": [
+        "vagueza",
+        "incompletude",
+        "referencia_ambigua",
+        "contradição_interna",
+        "termo_tecnico_indefinido"
+    ]
+}

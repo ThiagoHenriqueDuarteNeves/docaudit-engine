@@ -123,11 +123,60 @@ export default function ReportPage() {
                         </div>
                     </section>
 
-                    {/* 2. Requirements */}
+                    {/* 2. Risks (Risk Detection) */}
+                    {(items.risks?.length > 0) && (
+                        <section>
+                            <h2 className="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4 flex justify-between items-baseline">
+                                <span>2. Riscos Identificados</span>
+                                <span className="text-sm font-normal text-slate-500">{items.risks.length} itens</span>
+                            </h2>
+
+                            <div className="space-y-4">
+                                {items.risks.map((risk: any, idx: number) => (
+                                    <div key={idx} className="break-inside-avoid border-l-4 border-red-400 bg-red-50/30 p-4 rounded-r-lg print:bg-transparent print:border-red-300">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <div className="font-bold text-sm text-red-900">
+                                                Risco #{idx + 1}
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${risk.impact === 'alto' ? 'bg-red-200 text-red-800' :
+                                                    risk.impact === 'medio' ? 'bg-amber-200 text-amber-800' :
+                                                        'bg-slate-200 text-slate-600'
+                                                    }`}>
+                                                    {risk.impact || 'N/A'}
+                                                </span>
+                                                <span className="text-[10px] font-medium uppercase px-2 py-0.5 rounded bg-slate-100 text-slate-600 print:border print:border-slate-300">
+                                                    {risk.risk_type || 'geral'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <p className="text-sm text-slate-800 mb-2">{risk.description}</p>
+                                        {risk.evidence && (
+                                            <p className="text-xs text-slate-500 italic mt-2 pl-2 border-l-2 border-red-200">
+                                                Evidência: "{risk.evidence}"
+                                            </p>
+                                        )}
+                                        {risk.justification && (
+                                            <p className="text-xs text-slate-600 mt-2">
+                                                <span className="font-semibold">Justificativa:</span> {risk.justification}
+                                            </p>
+                                        )}
+                                        {risk.mitigation_question && (
+                                            <p className="text-xs text-blue-700 mt-2 bg-blue-50 p-2 rounded print:bg-transparent">
+                                                <span className="font-semibold">Pergunta de mitigação:</span> {risk.mitigation_question}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* 3. Requirements */}
                     {(items.requirements?.length > 0) && (
                         <section>
                             <h2 className="text-xl font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4 flex justify-between items-baseline">
-                                <span>2. Requisitos Extraídos</span>
+                                <span>3. Requisitos Extraídos</span>
                                 <span className="text-sm font-normal text-slate-500">{items.requirements.length} itens</span>
                             </h2>
 

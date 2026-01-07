@@ -327,7 +327,8 @@ def _internal_analyze_pipeline(
     scan_batch_size: int = 12,
     scan_passes: int = 1,
     debug_llm: bool = False,
-    prompt_variant: str = "v1"
+    prompt_variant: str = "v1",
+    on_progress: Optional[callable] = None  # Callback: (batch_current, batch_total) -> None
 ) -> dict:
     """
     Realiza análise técnica em documentos específicos com validação e repair.
@@ -490,6 +491,13 @@ Se nada for encontrado, retorne {{ "items": {{}} }}
                 
                 logger.info(f"   ✅ [ADT SCAN] Lote {batch_num} concluído: ~{item_count} itens potenciais.")
                 
+                # Invoke progress callback if provided
+                if on_progress:
+                    try:
+                        on_progress(batch_num, num_batches)
+                    except Exception as cb_err:
+                        logger.warning(f"⚠️ Progress callback error: {cb_err}")
+                
             except Exception as e:
                 logger.error(f"⚠️ Erro no batch {i}: {e}")
         
@@ -548,6 +556,7 @@ Se nada for encontrado, retorne {{ "items": {{}} }}
             "total_chunks": total_chunks,
             "processed_chunks": processed_count,
             "batches": (total_chunks + scan_batch_size - 1) // scan_batch_size,
+            "batch_size": scan_batch_size,  # Added for observability
         }
         
         if debug_llm:
@@ -796,4 +805,51 @@ def analyze_documents(
         document_ids, analysis_type, question, max_items_per_category,
         scan_all, scan_batch_size, scan_passes, debug_llm, 
         prompt_variant="v1"
+    )
+
+
+def analyze_documents_with_progress(
+    document_ids: List[str],
+    analysis_type: str,
+    question: Optional[str] = None,
+    max_items_per_category: int = 5,
+    scan_all: bool = False,
+    scan_batch_size: int = 6,
+    scan_passes: int = 1,
+    debug_llm: bool = False,
+    on_progress: Optional[callable] = None
+) -> dict:
+    """
+    Realiza análise técnica com callback de progresso.
+    Esta função é usada pelo sistema de polling para reportar progresso em tempo real.
+    
+    Args:
+        on_progress: Callback (batch_current, batch_total) -> None
+    """
+    print(f"DEBUG: Calling analyze_documents_with_progress for {analysis_type}")
+    
+    # QA Requirements Audit: Use V3 Pipeline (não suporta callback ainda)
+    if analysis_type == "qa_requirements_audit":
+        from core.qa_audit_v3 import run_qa_requirements_audit_v3
+        
+        current_prompt, current_schema = load_resources(analysis_type, variant="v2")
+        
+        logger.info(f"🚀 [ADT] Using QA Audit V3 Pipeline for {document_ids}")
+        
+        # TODO: Add progress support to V3 pipeline
+        return run_qa_requirements_audit_v3(
+            document_ids=document_ids,
+            system_prompt=current_prompt,
+            schema=current_schema,
+            debug_llm=debug_llm,
+            batch_size=4,
+            max_chunks=200
+        )
+    
+    # Other analysis types: Use internal pipeline WITH progress callback
+    return _internal_analyze_pipeline(
+        document_ids, analysis_type, question, max_items_per_category,
+        scan_all, scan_batch_size, scan_passes, debug_llm, 
+        prompt_variant="v1",
+        on_progress=on_progress
     )

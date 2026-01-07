@@ -157,9 +157,36 @@ class AnalyzeRequest(BaseModel):
     question: Optional[str] = None
     max_items_per_category: Optional[int] = 5
     scan_all: bool = False
-    scan_batch_size: int = 12
+    scan_batch_size: int = 6  # Reduced from 12 to avoid LLM context overflow
     scan_passes: int = 1
     debug_llm: bool = False
+
+# ============================================================================
+# JOB QUEUE FOR ASYNC ANALYSIS WITH PROGRESS POLLING
+# ============================================================================
+import uuid
+import threading
+from datetime import datetime
+from enum import Enum
+
+class JobStatus(str, Enum):
+    PENDING = "pending"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+
+class AnalyzeJobResponse(BaseModel):
+    job_id: str
+    status: JobStatus
+    batch_current: Optional[int] = None
+    batch_total: Optional[int] = None
+    percent: Optional[int] = None
+    message: Optional[str] = None
+    result: Optional[dict] = None
+    error: Optional[str] = None
+
+# Global job storage: { job_id: { status, progress, result, error, created_at } }
+_analyze_jobs: dict = {}
 
 @app.post("/api/index")
 async def index_document(
@@ -291,6 +318,112 @@ async def generate_debug_context(request: ChatMessage, user_memory: Conversation
         import traceback
         print(f"Erro debug: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# ============================================================================
+# ANALYZE WITH POLLING PROGRESS
+# ============================================================================
+
+def _run_analyze_job(job_id: str, request_data: dict):
+    """Background worker for analyze job with progress updates."""
+    from core.adt import analyze_documents_with_progress
+    
+    try:
+        _analyze_jobs[job_id]["status"] = JobStatus.RUNNING
+        _analyze_jobs[job_id]["message"] = "Iniciando análise..."
+        
+        def on_progress(batch_current: int, batch_total: int):
+            """Callback invoked by ADT for each batch processed."""
+            pct = int((batch_current / batch_total) * 100) if batch_total > 0 else 0
+            _analyze_jobs[job_id].update({
+                "batch_current": batch_current,
+                "batch_total": batch_total,
+                "percent": pct,
+                "message": f"Processando lote {batch_current} de {batch_total}..."
+            })
+        
+        result = analyze_documents_with_progress(
+            document_ids=request_data["document_ids"],
+            analysis_type=request_data["analysis_type"],
+            question=request_data.get("question"),
+            max_items_per_category=request_data.get("max_items_per_category", 5),
+            scan_all=request_data.get("scan_all", False),
+            scan_batch_size=request_data.get("scan_batch_size", 6),
+            scan_passes=request_data.get("scan_passes", 1),
+            debug_llm=request_data.get("debug_llm", False),
+            on_progress=on_progress
+        )
+        
+        if "error" in result and "meta" not in result:
+            _analyze_jobs[job_id]["status"] = JobStatus.FAILED
+            _analyze_jobs[job_id]["error"] = result.get("error", "Unknown error")
+        else:
+            _analyze_jobs[job_id]["status"] = JobStatus.COMPLETED
+            _analyze_jobs[job_id]["result"] = result
+            _analyze_jobs[job_id]["message"] = "Análise concluída!"
+            _analyze_jobs[job_id]["percent"] = 100
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        _analyze_jobs[job_id]["status"] = JobStatus.FAILED
+        _analyze_jobs[job_id]["error"] = str(e)
+
+
+@app.post("/api/analyze/start", response_model=AnalyzeJobResponse)
+async def start_analyze_job(request: AnalyzeRequest, background_tasks: BackgroundTasks):
+    """
+    Inicia análise em background e retorna job_id para polling.
+    Use GET /api/analyze/status/{job_id} para verificar progresso.
+    """
+    job_id = str(uuid.uuid4())[:8]  # Short ID for convenience
+    
+    _analyze_jobs[job_id] = {
+        "status": JobStatus.PENDING,
+        "batch_current": 0,
+        "batch_total": 0,
+        "percent": 0,
+        "message": "Job criado, aguardando início...",
+        "result": None,
+        "error": None,
+        "created_at": datetime.now().isoformat()
+    }
+    
+    # Start in background thread (not asyncio, since analyze is CPU-bound)
+    request_data = request.model_dump()
+    thread = threading.Thread(target=_run_analyze_job, args=(job_id, request_data))
+    thread.start()
+    
+    print(f"🚀 [API/analyze/start] Job {job_id} created for {request.analysis_type}")
+    
+    return AnalyzeJobResponse(
+        job_id=job_id,
+        status=JobStatus.PENDING,
+        message="Job criado, processamento iniciando..."
+    )
+
+
+@app.get("/api/analyze/status/{job_id}", response_model=AnalyzeJobResponse)
+async def get_analyze_status(job_id: str):
+    """
+    Retorna status atual do job de análise.
+    Poll este endpoint a cada 2 segundos até status='completed' ou 'failed'.
+    """
+    if job_id not in _analyze_jobs:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} não encontrado")
+    
+    job = _analyze_jobs[job_id]
+    
+    return AnalyzeJobResponse(
+        job_id=job_id,
+        status=job["status"],
+        batch_current=job.get("batch_current"),
+        batch_total=job.get("batch_total"),
+        percent=job.get("percent"),
+        message=job.get("message"),
+        result=job.get("result") if job["status"] == JobStatus.COMPLETED else None,
+        error=job.get("error") if job["status"] == JobStatus.FAILED else None
+    )
+
 
 @app.post("/api/analyze")
 async def analyze_endpoint(request: AnalyzeRequest):

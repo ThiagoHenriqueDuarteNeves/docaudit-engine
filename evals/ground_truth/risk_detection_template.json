@@ -1,0 +1,58 @@
+{
+    "_comment": "Ground Truth para avaliação do DocAudit Engine - Risk Detection",
+    "_instructions": "Preencha expected_items com os riscos REAIS que existem no documento",
+    "document_id": "Polícia Militar de Minas Gerais - CCOS - Alô Concursos _ Alô Concursos.pdf",
+    "analysis_type": "risk_detection",
+    "annotated_by": "human",
+    "annotated_at": "2026-01-07",
+    "expected_items": {
+        "risks": [
+            {
+                "description": "Candidato pode ter inscrição cancelada se apresentar documentos falsos para isenção",
+                "risk_type": "juridico",
+                "impact": "alto",
+                "evidence": "A obtenção da isenção por meio de prestação de informações inverídicas ou utilizando documentos falsos resultará no cancelamento da inscrição...",
+                "justification": "Consequência grave e irreversível para o candidato",
+                "mitigation_question": "Como será feita a verificação de autenticidade dos documentos?"
+            },
+            {
+                "description": "Prazo curto para interposição de recursos",
+                "risk_type": "operacional",
+                "impact": "medio",
+                "evidence": "O candidato terá 2 dias úteis para interpor recurso...",
+                "justification": "Prazo pode ser insuficiente para candidatos com dificuldade de acesso",
+                "mitigation_question": "Há possibilidade de extensão do prazo em casos excepcionais?"
+            },
+            {
+                "description": "Falta de clareza sobre critérios de desempate",
+                "risk_type": "juridico",
+                "impact": "medio",
+                "evidence": "Em caso de empate, serão aplicados os critérios...",
+                "justification": "Pode gerar contestações judiciais",
+                "mitigation_question": "Os critérios estão claramente definidos e em ordem de prioridade?"
+            },
+            {
+                "description": "Ausência de previsão para casos de força maior",
+                "risk_type": "operacional",
+                "impact": "baixo",
+                "evidence": "Não identificado no documento",
+                "justification": "Eventos imprevistos podem afetar o cronograma",
+                "mitigation_question": "Existe plano de contingência para situações atípicas?"
+            }
+        ]
+    },
+    "expected_counts": {
+        "risks": 4
+    },
+    "risk_types_expected": [
+        "juridico",
+        "operacional",
+        "tecnico",
+        "financeiro"
+    ],
+    "impact_levels": [
+        "alto",
+        "medio",
+        "baixo"
+    ]
+}

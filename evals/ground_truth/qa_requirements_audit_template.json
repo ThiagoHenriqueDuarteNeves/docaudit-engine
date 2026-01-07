@@ -1,0 +1,55 @@
+{
+    "_comment": "Ground Truth para avaliação do DocAudit Engine - QA Requirements Audit",
+    "_instructions": "Preencha expected_items com os requisitos REAIS que existem no documento",
+    "document_id": "AuditDocEngine_Demo_SRS_QA_Requisitos.pdf",
+    "analysis_type": "qa_requirements_audit",
+    "annotated_by": "human",
+    "annotated_at": "2026-01-07",
+    "expected_items": {
+        "requirements": [
+            {
+                "id": "REQ-001",
+                "texto": "O sistema deve permitir cadastro de usuários com email e senha",
+                "tipo": "funcional",
+                "testabilidade": "testavel",
+                "evidencia_literal": "O sistema deve permitir cadastro de usuários..."
+            },
+            {
+                "id": "REQ-002",
+                "texto": "O tempo de resposta das APIs deve ser inferior a 500ms",
+                "tipo": "nao-funcional",
+                "testabilidade": "testavel",
+                "evidencia_literal": "Performance: tempo de resposta < 500ms"
+            }
+        ],
+        "ambiguities": [
+            {
+                "problema": "Termo 'rapidamente' não define tempo específico",
+                "trecho_problematico": "O sistema deve responder rapidamente",
+                "sugestao_reescrita": "O sistema deve responder em até 200ms"
+            }
+        ],
+        "contradictions": [
+            {
+                "descricao": "Seção 3.1 diz X, mas seção 4.2 diz Y",
+                "evidencia_a": "Texto da seção 3.1...",
+                "evidencia_b": "Texto da seção 4.2...",
+                "severidade": "alta"
+            }
+        ],
+        "unverifiable_criteria": [
+            {
+                "id_requisito": "REQ-005",
+                "motivo": "Não há métrica definida para 'fácil de usar'",
+                "evidencia_literal": "O sistema deve ser fácil de usar",
+                "como_tornar_testavel": "Definir métricas de usabilidade (ex: SUS score > 70)"
+            }
+        ]
+    },
+    "expected_counts": {
+        "requirements": 2,
+        "ambiguities": 1,
+        "contradictions": 1,
+        "unverifiable_criteria": 1
+    }
+}
