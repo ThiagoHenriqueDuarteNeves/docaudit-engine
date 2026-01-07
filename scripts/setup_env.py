@@ -9,7 +9,8 @@ import getpass
 
 def setup_environment():
     """Cria arquivo .env com configurações iniciais"""
-    env_path = Path(".env")
+    # Buscar .env na raiz do projeto (scripts/../.env)
+    env_path = Path(__file__).parent.parent / ".env"
     
     if env_path.exists():
         print("✅ Arquivo .env já existe!")

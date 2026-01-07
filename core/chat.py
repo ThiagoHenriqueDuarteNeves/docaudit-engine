@@ -22,7 +22,7 @@ except ImportError:
 # Imports Legados (por enquanto)
 # from document_manager import DocumentManager # Removido
 from tools import DocumentSearchTool, MemorySearchTool
-from router import classify_query_simple
+from core.router import classify_query_simple
 
 # Inicializar Gerenciadores
 doc_manager = documents.get_doc_manager()
