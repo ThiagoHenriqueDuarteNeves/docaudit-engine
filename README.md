@@ -25,7 +25,9 @@ graph TD
     subgraph DocAudit_Core["DocAudit Core"]
         API --> Manager["Document Manager"]
         API --> ADT["⚙️ Aurora ADT Engine"]
-        ADT -->|Scan All| Qdrant["💾 Qdrant - Vector Store"]
+        ADT -->|Hybrid Search| Retrieval["🔍 Hybrid Retrieval"]
+        Retrieval --> Qdrant["💾 Qdrant - Dense Vectors"]
+        Retrieval --> BM25["📑 BM25 - Lexical Search"]
         ADT -->|Analyze| LLM["🤖 Local LLM - LM Studio"]
     end
     
