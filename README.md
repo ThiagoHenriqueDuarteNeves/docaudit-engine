@@ -19,18 +19,18 @@ Diferente de chatbots genéricos, o DocAudit é focado em processamento estrutur
 
 ```mermaid
 graph TD
-    User[👤 Auditor] -->|Upload/Config| UI[💻 Frontend (Next.js)]
-    UI -->|JSON Request| API[⚡ Backend FastAPI]
+    User["👤 Auditor"] -->|Upload/Config| UI["💻 Frontend - Next.js"]
+    UI -->|JSON Request| API["⚡ Backend FastAPI"]
     
-    subgraph "DocAudit Core"
-        API --> Manager[Document Manager]
-        API --> ADT[⚙️ Aurora ADT Engine]
-        ADT -->|Scan All| Qdrant[💾 Qdrant (Vector Store)]
-        ADT -->|Analyze| LLM[🤖 Local LLM (LM Studio)]
+    subgraph DocAudit_Core["DocAudit Core"]
+        API --> Manager["Document Manager"]
+        API --> ADT["⚙️ Aurora ADT Engine"]
+        ADT -->|Scan All| Qdrant["💾 Qdrant - Vector Store"]
+        ADT -->|Analyze| LLM["🤖 Local LLM - LM Studio"]
     end
     
-    subgraph "Validation"
-        LLM -->|Extract| Schema[📝 JSON Schema Validation]
+    subgraph Validation
+        LLM -->|Extract| Schema["📝 JSON Schema Validation"]
         Schema -->|Report| UI
     end
 ```
