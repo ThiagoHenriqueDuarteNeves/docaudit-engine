@@ -1,19 +1,18 @@
 # 🕵️‍♂️ DocAudit Engine
 
-**DocAudit Engine** é uma plataforma avançada de **Auditoria de Qualidade e Análise de Riscos** impulsionada por IA. Utilizando uma arquitetura RAG (Retrieval-Augmented Generation) híbrida, o sistema analisa contratos e documentos técnicos para detectar riscos, ambiguidades e conformidade com requisitos.
-
-Diferente de chatbots genéricos, o DocAudit é focado em processamento estruturado (Aurora ADT Pipeline), permitindo varredura completa de documentos ("Scan All") para relatórios detalhados.
+**DocAudit Engine** é uma plataforma de **Auditoria de Qualidade e Análise de Riscos** para documentos (contratos e requisitos), usando uma arquitetura RAG híbrida.  
+O foco é processamento estruturado (Aurora ADT Pipeline) e o modo **Scan All** para varredura completa do documento (chunk por chunk).
 
 ## ✨ Funcionalidades Principais
 
-- 🔍 **Auditoria Automatizada**: Pipelines dedicados para:
-  - **QA Requirements Audit**: Validação de requisitos técnicos.
-  - **Risk Detection**: Identificação de riscos jurídicos, administrativos e operacionais.
-  - **Ambiguity Detection**: Detecção de termos vagos ou mal definidos.
-- 🚀 **Full Retrieval Scan**: Capacidade de processar o documento inteiro (chunk por chunk) garantindo 100% de cobertura na análise, sem depender apenas de busca por similaridade.
-- 📊 **Relatórios Estruturados**: Geração de saídas em JSON estrito e visualização rica em dashboard interativo.
-- 🧠 **Memória Híbrida**: Combinação de busca vetorial (**Qdrant**) e lexical (**BM25**) para precisão máxima.
-- ⚡ **Frontend Moderno (Next.js)**: Interface reativa construída com React 19 e TailwindCSS.
+- 🔍 **Auditoria Automatizada** com pipelines:
+  - **QA Requirements Audit** (validação de requisitos)
+  - **Risk Detection** (riscos jurídicos/administrativos/operacionais)
+  - **Ambiguity Detection** (termos vagos ou mal definidos)
+- 🚀 **Full Retrieval Scan (Scan All)**: percorre **todos os chunks gerados** (cobertura total de leitura do documento), sem depender apenas de busca por similaridade.
+- 📊 **Relatórios Estruturados**: saída em **JSON validado por schema** + visualização em dashboard.
+- 🧠 **Retrieval Híbrido**: combinação de vetorial (**Qdrant**) e lexical (**BM25**) para equilibrar precisão e recall.
+- ⚡ **Frontend (Next.js)**: interface reativa com React e TailwindCSS.
 
 ## 🏗️ Arquitetura
 
@@ -36,9 +35,8 @@ graph TD
         LLM -->|Extract| Schema["📝 JSON Schema Validation"]
         Schema -->|Report| UI
     end
-```
 
-## 🛠️ Tech Stack
+🛠️ Tech Stack
 
 ### Frontend
 
@@ -53,12 +51,9 @@ graph TD
 - **Core Logic:** LangChain + Aurora ADT (Custom Pipeline)
 - **Busca:** Hybrid (Dense + BM25)
 
-## 📋 Pré-requisitos
+Estilização: TailwindCSS & Lucide React
 
-- **Python 3.11+**
-- **Node.js 18+**
-- **Docker** (para Qdrant)
-- **LM Studio** (recomendado para LLM local)
+UI Components: Shadcn/ui (Radix UI)
 
 ## ⚙️ Configuração (.env)
 
