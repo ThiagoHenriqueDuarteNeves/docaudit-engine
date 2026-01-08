@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { runAnalyzeWithProgress, uploadDocument, fetchDocuments, DocumentInfo, ProgressInfo } from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import { ModelSelector } from "@/components/model-selector";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -102,9 +103,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 p-8 font-sans">
       <div className="max-w-2xl mx-auto space-y-8">
-        <header>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">DocAudit Engine</h1>
-          <p className="text-slate-500">Frontend MVP para demonstração do pipeline QA Audit.</p>
+        <header className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900">DocAudit Engine</h1>
+            <p className="text-slate-500">Frontend MVP para demonstração do pipeline QA Audit.</p>
+          </div>
+          <ModelSelector />
         </header>
 
         {/* 1. Upload Section */}
