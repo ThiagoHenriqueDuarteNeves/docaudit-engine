@@ -190,3 +190,29 @@ export async function runAnalyzeWithProgress(
         setTimeout(poll, 500);
     });
 }
+// ============================================================================
+// MODELS MANAGEMENT
+// ============================================================================
+
+export interface ModelResponse {
+    models: string[];
+    current: string;
+}
+
+export async function fetchModels(): Promise<ModelResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/models`);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Erro ao listar modelos");
+    return data;
+}
+
+export async function selectModel(modelName: string) {
+    const response = await fetch(`${API_BASE_URL}/api/model/select`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: modelName }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Erro ao selecionar modelo");
+    return data;
+}

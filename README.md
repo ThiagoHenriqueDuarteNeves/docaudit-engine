@@ -22,14 +22,14 @@ graph TD
     User["👤 Auditor"] -->|Upload/Config| UI["💻 Frontend - Next.js"]
     UI <-->|Polling/JSON| API["⚡ Backend FastAPI"]
     
-    subgraph DocAudit_Core["DocAudit Core"]
+    subgraph DocAudit_Core [DocAudit Core]
         API --> Manager["Document Manager"]
         API --> ADT["⚙️ Aurora ADT Engine"]
         ADT -->|Hybrid Search| Retrieval["🔍 Hybrid Retrieval"]
         Retrieval --> Qdrant["💾 Qdrant - Dense Vectors"]
         Retrieval --> BM25["📑 BM25 - Lexical Search"]
         ADT -->|Analyze| LLM["🤖 Local LLM - LM Studio"]
-        ADT -.->|Trace| LangSmith["🛠️ LangSmith - Observability"]
+        ADT -.->|Trace| LangSmith["🛠️ LangSmith - Observability (opcional)"]
     end
     
     subgraph Validation
@@ -41,11 +41,13 @@ graph TD
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework:** Next.js 16 (React 19)
 - **Estilização:** TailwindCSS & Lucide React
 - **UI Components:** Shadcn/ui (Radix UI)
 
 ### Backend
+
 - **API:** FastAPI (Python 3.11+)
 - **Vector DB:** Qdrant (Docker)
 - **Core Logic:** LangChain + Aurora ADT (Custom Pipeline)
@@ -58,63 +60,101 @@ graph TD
 - **Docker** (para Qdrant)
 - **LM Studio** (recomendado para LLM local)
 
-## 🚀 Como Rodar
-
-### 1. Preparar Banco de Dados
-Certifique-se que o Docker está rodando e inicie o Qdrant:
-```bash
-docker start qdrant-rag
-# OU se for a primeira vez:
-# docker run -p 6333:6333 -p 6334:6334 qdrant/qdrant
-```
-
-### 2. Iniciar Backend
-```bash
-# Navegue até a raiz
-python -m venv .venv
-.\.venv\Scripts\Activate
-
-# Instalar dependências
-pip install -r requirements.txt
-
-# Iniciar API
-python -m uvicorn api:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 3. Iniciar Frontend
-⚠️ **Importante:** O frontend atual está na pasta `frontend` (Next.js), não use `frontend-new`.
-
-```bash
-cd frontend
-
-# Instalar dependências
-npm install
-
-# Rodar servidor de desenvolvimento
-npm run dev
-```
-O frontend estará acessível em: `http://localhost:3000`
-
 ## ⚙️ Configuração (.env)
 
-Crie/edite o arquivo `.env` na raiz:
+Crie um arquivo `.env` na raiz (ou copie de um `.env.example` caso exista):
+
+```bash
+cp .env.example .env
+```
+
+Exemplo:
 
 ```env
-# URL do modelo LLM (LM Studio ou OpenAI)
+# LLM local (LM Studio)
 LM_STUDIO_URL=http://localhost:1234/v1
 
-# Configuração Qdrant
+# Qdrant
 QDRANT_URL=http://localhost:6333
 QDRANT_COLLECTION=rag_collection
 
-# Parâmetros de Análise
+# Embeddings
 EMBED_MODEL=intfloat/multilingual-e5-base
 ```
 
+## 🚀 Como Rodar
+
+> Recomendado: usar Docker Compose para subir o Qdrant.
+
+### 1) Subir o Qdrant (Vector DB)
+
+Com Docker Compose (recomendado):
+
+```bash
+docker compose up -d
+```
+
+Alternativa (docker run):
+
+```bash
+docker run --name qdrant -p 6333:6333 -p 6334:6334 -d qdrant/qdrant
+```
+
+Verifique se está de pé:
+
+```bash
+curl http://localhost:6333/healthz
+```
+
+### 2) Backend (FastAPI)
+
+Na raiz do repositório:
+
+```bash
+python -m venv .venv
+```
+
+Windows (PowerShell):
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Windows (cmd):
+
+```cmd
+.\.venv\Scripts\activate.bat
+```
+
+macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+Instale dependências e rode a API:
+
+```bash
+pip install -r requirements.txt
+python -m uvicorn api:app --reload --host 0.0.0.0 --port 8000
+```
+
+### 3) Frontend (Next.js)
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Acesse: `http://localhost:3000`
+
+> **Nota:** `frontend-new` é legado/experimental e não é usado na demo atual.
+
 ## 📝 Primeiros Passos
 
-1. Acesse `http://localhost:3000`.
-2. Faça **Upload** de um contrato ou documento de requisitos (PDF).
-3. Selecione o tipo de análise (ex: *Risk Detection*).
-4. Marque **"Scan All Chunks"** para uma varredura completa.
-5. Clique em **Executar Análise** e aguarde o relatório.
+1. Acesse `http://localhost:3000`
+2. Faça **Upload** de um PDF (contrato ou requisitos).
+3. Selecione o tipo de análise (ex.: *Risk Detection*).
+4. (Opcional) Marque **Scan All Chunks** para varredura completa.
+5. Clique em **Executar Análise** e aguarde o relatório em JSON.
